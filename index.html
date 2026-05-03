@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Food Insecurity — Chronic vs Acute</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F5F0E8;
+    --warm-white: #FAF8F4;
+    --charcoal: #1C1C1C;
+    --mid: #4A4A4A;
+    --muted: #8A8680;
+    --chronic-dark: #2D1B0E;
+    --chronic-mid: #8B4513;
+    --chronic-light: #D4956A;
+    --chronic-pale: #F5E6D3;
+    --acute-dark: #0A1628;
+    --acute-mid: #1A4A7A;
+    --acute-light: #4A90D9;
+    --acute-pale: #D6E9F8;
+    --border: rgba(28,28,28,0.1);
+    --section-gap: 120px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--warm-white);
+    color: var(--charcoal);
+    overflow-x: hidden;
+  }
+
+  /* ── NAVIGATION ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(250,248,244,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 5%;
+    height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 700; letter-spacing: -0.5px;
+  }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    font-size: 13px; font-weight: 500; text-decoration: none;
+    color: var(--mid); letter-spacing: 0.3px; text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--charcoal); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    padding-top: 64px;
+    overflow: hidden;
+  }
+  .hero-left {
+    background: #1C1410;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 80px 8% 80px 10%;
+    position: relative;
+  }
+  .hero-left::after {
+    content: '';
+    position: absolute; right: -1px; top: 0; bottom: 0; width: 2px;
+    background: linear-gradient(to bottom, transparent, #D4956A 30%, #D4956A 70%, transparent);
+  }
+  .hero-eyebrow {
+    font-size: 11px; font-weight: 500; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--chronic-light);
+    margin-bottom: 24px;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(42px, 5vw, 72px);
+    font-weight: 900; line-height: 1.05;
+    color: #FAF8F4;
+    margin-bottom: 28px;
+  }
+  .hero-title span { color: var(--chronic-light); font-style: italic; }
+  .hero-desc {
+    font-size: 16px; line-height: 1.75; color: #B8A898; font-weight: 300;
+    max-width: 420px; margin-bottom: 48px;
+  }
+  .hero-stat-row {
+    display: flex; gap: 40px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 36px;
+  }
+  .hero-stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 38px; font-weight: 700; color: var(--chronic-light);
+    line-height: 1;
+  }
+  .hero-stat-label { font-size: 12px; color: #7A6A5A; margin-top: 6px; line-height: 1.4; }
+
+  .hero-right {
+    background: var(--acute-dark);
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 80px 10% 80px 8%;
+    position: relative;
+  }
+  .hero-right .hero-eyebrow { color: var(--acute-light); }
+  .hero-right .hero-title { color: #F0F4FA; }
+  .hero-right .hero-title span { color: var(--acute-light); font-style: italic; }
+  .hero-right .hero-desc { color: #7A9AB8; }
+  .hero-right .hero-stat-row { border-top-color: rgba(255,255,255,0.08); }
+  .hero-right .hero-stat-num { color: var(--acute-light); }
+  .hero-right .hero-stat-label { color: #3A5A78; }
+  .hero-right::before {
+    content: '';
+    position: absolute; left: -1px; top: 0; bottom: 0; width: 2px;
+    background: linear-gradient(to bottom, transparent, #4A90D9 30%, #4A90D9 70%, transparent);
+  }
+
+  /* ── SECTION HEADER ── */
+  .section { padding: 100px 10%; }
+  .section-label {
+    font-size: 11px; font-weight: 500; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 4vw, 52px); font-weight: 700;
+    line-height: 1.12; margin-bottom: 20px;
+  }
+  .section-intro {
+    font-size: 17px; line-height: 1.8; color: var(--mid);
+    max-width: 680px; font-weight: 300;
+  }
+
+  /* ── DEFINITIONS SPLIT ── */
+  .definitions {
+    background: var(--cream);
+    padding: 100px 10%;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+  }
+  .def-card {
+    padding: 64px 56px; position: relative; overflow: hidden;
+  }
+  .def-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  }
+  .def-chronic { background: var(--chronic-pale); }
+  .def-chronic::before { background: linear-gradient(90deg, var(--chronic-dark), var(--chronic-light)); }
+  .def-acute { background: var(--acute-pale); }
+  .def-acute::before { background: linear-gradient(90deg, var(--acute-dark), var(--acute-light)); }
+
+  .def-tag {
+    display: inline-block; padding: 5px 14px; border-radius: 20px;
+    font-size: 11px; font-weight: 500; letter-spacing: 1.5px;
+    text-transform: uppercase; margin-bottom: 28px;
+  }
+  .def-chronic .def-tag { background: var(--chronic-dark); color: var(--chronic-light); }
+  .def-acute .def-tag { background: var(--acute-dark); color: var(--acute-light); }
+
+  .def-word {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px; font-weight: 900; line-height: 1;
+    margin-bottom: 24px;
+  }
+  .def-chronic .def-word { color: var(--chronic-dark); }
+  .def-acute .def-word { color: var(--acute-dark); }
+
+  .def-text {
+    font-size: 16px; line-height: 1.8; color: var(--mid);
+    font-weight: 300; margin-bottom: 32px;
+  }
+  .def-quote {
+    border-left: 3px solid;
+    padding: 16px 20px;
+    font-size: 15px; line-height: 1.7; font-style: italic;
+    border-radius: 0 6px 6px 0;
+  }
+  .def-chronic .def-quote { border-color: var(--chronic-mid); background: rgba(139,69,19,0.06); color: var(--chronic-dark); }
+  .def-acute .def-quote { border-color: var(--acute-mid); background: rgba(26,74,122,0.06); color: var(--acute-dark); }
+
+  /* ── CAUSES ── */
+  .causes-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+    margin-top: 60px;
+  }
+  .causes-col-header {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 700;
+    padding-bottom: 20px; margin-bottom: 28px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .causes-chronic .causes-col-header {
+    color: var(--chronic-dark);
+    border-bottom: 2px solid var(--chronic-light);
+  }
+  .causes-acute .causes-col-header {
+    color: var(--acute-dark);
+    border-bottom: 2px solid var(--acute-light);
+  }
+  .dot {
+    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+  }
+  .dot-chronic { background: var(--chronic-light); }
+  .dot-acute { background: var(--acute-light); }
+
+  .cause-item {
+    display: flex; gap: 16px; margin-bottom: 24px;
+    align-items: flex-start;
+  }
+  .cause-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0; margin-top: 2px;
+  }
+  .cause-chronic .cause-icon { background: var(--chronic-pale); }
+  .cause-acute .cause-icon { background: var(--acute-pale); }
+
+  .cause-title { font-size: 15px; font-weight: 500; margin-bottom: 6px; }
+  .cause-desc { font-size: 14px; line-height: 1.65; color: var(--mid); font-weight: 300; }
+
+  /* ── TIMELINE COMPARISON ── */
+  .timeline-section {
+    background: var(--charcoal);
+    padding: 100px 10%;
+    color: #FAF8F4;
+  }
+  .timeline-section .section-label { color: #6A6A6A; }
+  .timeline-section .section-title { color: #FAF8F4; }
+  .timeline-section .section-intro { color: #8A8A8A; }
+
+  .timeline-wrap {
+    display: grid; grid-template-columns: 1fr 40px 1fr;
+    margin-top: 60px; gap: 0;
+    align-items: start;
+  }
+  .timeline-col { padding: 0 40px 0 0; }
+  .timeline-col:last-child { padding: 0 0 0 40px; }
+  .timeline-center {
+    display: flex; flex-direction: column; align-items: center;
+    padding-top: 48px;
+  }
+  .timeline-line {
+    width: 2px; flex: 1; min-height: 500px;
+    background: linear-gradient(to bottom, #D4956A, #4A90D9);
+  }
+  .timeline-entry {
+    position: relative; margin-bottom: 36px;
+    padding: 24px 28px;
+    border-radius: 12px;
+  }
+  .te-chronic { background: rgba(212,149,106,0.1); border: 1px solid rgba(212,149,106,0.2); }
+  .te-acute { background: rgba(74,144,217,0.1); border: 1px solid rgba(74,144,217,0.2); }
+  .te-time {
+    font-size: 11px; font-weight: 500; letter-spacing: 1.5px;
+    text-transform: uppercase; margin-bottom: 10px;
+  }
+  .te-chronic .te-time { color: var(--chronic-light); }
+  .te-acute .te-time { color: var(--acute-light); }
+  .te-text { font-size: 14px; line-height: 1.65; color: #A0A0A0; font-weight: 300; }
+  .te-text strong { color: #E0E0E0; font-weight: 500; }
+
+  .tl-header {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px; font-weight: 700; margin-bottom: 32px;
+    padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .tl-chronic-hdr { color: var(--chronic-light); }
+  .tl-acute-hdr { color: var(--acute-light); }
+
+  /* ── EXAMPLES ── */
+  .examples-section { padding: 100px 10%; }
+  .examples-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 24px; margin-top: 60px;
+  }
+  .example-card {
+    border: 1px solid var(--border);
+    border-radius: 16px; overflow: hidden;
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+  .example-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+  }
+  .example-top {
+    height: 8px;
+  }
+  .ec-chronic .example-top { background: linear-gradient(90deg, var(--chronic-dark), var(--chronic-light)); }
+  .ec-acute .example-top { background: linear-gradient(90deg, var(--acute-dark), var(--acute-light)); }
+  .ec-both .example-top { background: linear-gradient(90deg, var(--chronic-light), #8A8A8A, var(--acute-light)); }
+
+  .example-body { padding: 28px; }
+  .example-region {
+    font-size: 11px; font-weight: 500; letter-spacing: 1.5px;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
+  }
+  .example-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700; margin-bottom: 14px; line-height: 1.3;
+  }
+  .example-text { font-size: 14px; line-height: 1.7; color: var(--mid); font-weight: 300; }
+  .example-tags {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px;
+  }
+  .tag {
+    padding: 4px 12px; border-radius: 20px; font-size: 11px;
+    font-weight: 500; letter-spacing: 0.5px;
+  }
+  .tag-chronic { background: var(--chronic-pale); color: var(--chronic-dark); }
+  .tag-acute { background: var(--acute-pale); color: var(--acute-dark); }
+  .tag-neutral { background: var(--cream); color: var(--mid); }
+
+  /* ── COMPARISON TABLE ── */
+  .compare-section {
+    background: var(--cream); padding: 100px 10%;
+  }
+  .compare-table {
+    margin-top: 60px; border-collapse: collapse; width: 100%;
+    border-radius: 16px; overflow: hidden;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.06);
+  }
+  .compare-table th {
+    padding: 24px 32px; text-align: left; font-size: 13px;
+    font-weight: 500; letter-spacing: 0.3px;
+  }
+  .th-dim { background: #2A2420; color: #7A6A5A; text-transform: uppercase; font-size: 11px; letter-spacing: 1px; }
+  .th-chronic { background: var(--chronic-dark); color: var(--chronic-light); }
+  .th-acute { background: var(--acute-dark); color: var(--acute-light); }
+
+  .compare-table td {
+    padding: 20px 32px; font-size: 14px; font-weight: 300;
+    vertical-align: top; line-height: 1.65;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .td-dim { background: var(--cream); font-weight: 500; font-size: 13px; color: var(--mid); }
+  .td-chronic { background: rgba(245,230,211,0.6); color: var(--chronic-dark); }
+  .td-acute { background: rgba(214,233,248,0.6); color: var(--acute-dark); }
+  .compare-table tr:nth-child(even) .td-dim { background: #ECE7DF; }
+  .compare-table tr:nth-child(even) .td-chronic { background: rgba(245,230,211,0.9); }
+  .compare-table tr:nth-child(even) .td-acute { background: rgba(214,233,248,0.9); }
+
+  /* ── CONSEQUENCES ── */
+  .consequences-section { padding: 100px 10%; }
+  .cons-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+    margin-top: 60px;
+  }
+  .cons-card {
+    border-radius: 20px; overflow: hidden;
+  }
+  .cons-header {
+    padding: 36px 40px;
+  }
+  .cons-chronic .cons-header { background: var(--chronic-dark); }
+  .cons-acute .cons-header { background: var(--acute-dark); }
+  .cons-header-tag {
+    font-size: 11px; font-weight: 500; letter-spacing: 1.5px;
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+  .cons-chronic .cons-header-tag { color: var(--chronic-light); }
+  .cons-acute .cons-header-tag { color: var(--acute-light); }
+  .cons-header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px; font-weight: 700; color: #FAF8F4;
+  }
+  .cons-body { background: var(--cream); padding: 32px 40px; }
+  .cons-item {
+    display: flex; align-items: flex-start; gap: 14px;
+    margin-bottom: 20px;
+  }
+  .cons-item:last-child { margin-bottom: 0; }
+  .cons-marker {
+    width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+    margin-top: 8px;
+  }
+  .cons-chronic .cons-marker { background: var(--chronic-mid); }
+  .cons-acute .cons-marker { background: var(--acute-mid); }
+  .cons-item-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+  .cons-item-text { font-size: 13px; line-height: 1.65; color: var(--mid); font-weight: 300; }
+
+  /* ── RESPONSE STRATEGIES ── */
+  .response-section {
+    background: var(--charcoal); padding: 100px 10%;
+  }
+  .response-section .section-label { color: #5A5A5A; }
+  .response-section .section-title { color: #FAF8F4; }
+  .response-section .section-intro { color: #7A7A7A; }
+
+  .response-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+    margin-top: 60px;
+  }
+  .response-col {}
+  .response-col-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 700; margin-bottom: 28px;
+    padding-bottom: 16px;
+  }
+  .rc-chronic { color: var(--chronic-light); border-bottom: 1px solid rgba(212,149,106,0.3); }
+  .rc-acute { color: var(--acute-light); border-bottom: 1px solid rgba(74,144,217,0.3); }
+
+  .response-item {
+    display: flex; gap: 16px; margin-bottom: 24px;
+  }
+  .ri-num {
+    width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 500;
+  }
+  .ri-chronic { background: rgba(212,149,106,0.15); color: var(--chronic-light); }
+  .ri-acute { background: rgba(74,144,217,0.15); color: var(--acute-light); }
+  .ri-title { font-size: 14px; font-weight: 500; color: #E0E0E0; margin-bottom: 5px; }
+  .ri-text { font-size: 13px; line-height: 1.65; color: #6A6A6A; font-weight: 300; }
+
+  /* ── DATA VIZ STRIP ── */
+  .data-section { padding: 100px 10%; background: var(--warm-white); }
+  .data-visual {
+    margin-top: 60px; display: flex; gap: 20px; align-items: stretch;
+  }
+  .data-bar-wrap {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    gap: 12px;
+  }
+  .data-bar-container {
+    width: 100%; height: 320px; background: var(--cream);
+    border-radius: 12px; position: relative; overflow: hidden;
+    display: flex; align-items: flex-end;
+  }
+  .data-bar {
+    width: 100%; border-radius: 8px 8px 0 0;
+    transition: height 1s ease;
+    position: absolute; bottom: 0; left: 0;
+  }
+  .bar-chronic { background: linear-gradient(to top, var(--chronic-dark), var(--chronic-light)); }
+  .bar-acute { background: linear-gradient(to top, var(--acute-dark), var(--acute-light)); }
+  .data-bar-label { font-size: 13px; font-weight: 500; text-align: center; color: var(--mid); }
+  .data-bar-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px; font-weight: 700; text-align: center;
+  }
+  .dv-chronic { color: var(--chronic-mid); }
+  .dv-acute { color: var(--acute-mid); }
+
+  .data-info {
+    width: 280px; flex-shrink: 0; padding: 36px;
+    background: var(--cream); border-radius: 16px;
+    display: flex; flex-direction: column; justify-content: center; gap: 28px;
+  }
+  .di-item {}
+  .di-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 40px; font-weight: 900; line-height: 1;
+  }
+  .di-chronic { color: var(--chronic-mid); }
+  .di-acute { color: var(--acute-mid); }
+  .di-label { font-size: 13px; color: var(--mid); margin-top: 6px; line-height: 1.4; font-weight: 300; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--charcoal); color: #6A6A6A;
+    padding: 60px 10%; text-align: center;
+  }
+  footer p { font-size: 13px; line-height: 1.8; font-weight: 300; }
+  footer strong { color: #B0B0B0; font-weight: 500; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { opacity: 0; animation: fadeUp 0.7s ease forwards; }
+  .d1 { animation-delay: 0.1s; }
+  .d2 { animation-delay: 0.25s; }
+  .d3 { animation-delay: 0.4s; }
+  .d4 { animation-delay: 0.55s; }
+  .d5 { animation-delay: 0.7s; }
+
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .revealed { opacity: 1; transform: translateY(0); }
+
+  /* ── OVERLAP BANNER ── */
+  .overlap-section {
+    padding: 80px 10%;
+    background: #F0EAE0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .overlap-inner {
+    display: flex; gap: 60px; align-items: center;
+  }
+  .overlap-icon { font-size: 64px; flex-shrink: 0; }
+  .overlap-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px; font-weight: 700; margin-bottom: 16px; line-height: 1.2;
+  }
+  .overlap-text { font-size: 15px; line-height: 1.8; color: var(--mid); font-weight: 300; }
+
+  /* ── SCROLL INDICATOR ── */
+  .scroll-cta {
+    position: absolute; bottom: 40px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    color: rgba(255,255,255,0.3); font-size: 11px; letter-spacing: 2px;
+    text-transform: uppercase; animation: fadeUp 1s 1s ease forwards; opacity: 0;
+  }
+  .scroll-arrow {
+    width: 24px; height: 24px; border-right: 1.5px solid rgba(255,255,255,0.3);
+    border-bottom: 1.5px solid rgba(255,255,255,0.3);
+    transform: rotate(45deg);
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 0.3; } 50% { opacity: 0.8; } }
+
+  .hero { position: relative; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .definitions { grid-template-columns: 1fr; }
+    .causes-grid, .timeline-wrap, .compare-table, .cons-grid, .response-grid { }
+    .timeline-wrap { grid-template-columns: 1fr; }
+    .examples-grid { grid-template-columns: 1fr 1fr; }
+    .data-visual { flex-direction: column; }
+    .data-info { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Food Insecurity</div>
+  <ul class="nav-links">
+    <li><a href="#definitions">Definitions</a></li>
+    <li><a href="#causes">Causes</a></li>
+    <li><a href="#examples">Examples</a></li>
+    <li><a href="#consequences">Consequences</a></li>
+    <li><a href="#response">Response</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow fade-up d1">Understanding Food Insecurity</p>
+    <h1 class="hero-title fade-up d2"><span>Chronic</span><br>Food<br>Insecurity</h1>
+    <p class="hero-desc fade-up d3">A persistent, long-term condition rooted in structural poverty and systemic failure — affecting hundreds of millions year-round, generation after generation.</p>
+    <div class="hero-stat-row fade-up d4">
+      <div>
+        <div class="hero-stat-num">733M</div>
+        <div class="hero-stat-label">people chronically<br>undernourished globally</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">decades</div>
+        <div class="hero-stat-label">typical duration<br>without intervention</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <p class="hero-eyebrow fade-up d1">Understanding Food Insecurity</p>
+    <h1 class="hero-title fade-up d2"><span>Acute</span><br>Food<br>Insecurity</h1>
+    <p class="hero-desc fade-up d3">A sudden, severe food crisis triggered by shocks — conflict, climate disasters, economic collapse — requiring urgent humanitarian response to prevent starvation.</p>
+    <div class="hero-stat-row fade-up d4">
+      <div>
+        <div class="hero-stat-num">282M</div>
+        <div class="hero-stat-label">people in acute<br>food crisis globally</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">weeks</div>
+        <div class="hero-stat-label">window for effective<br>emergency response</div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-cta">
+    <span>Scroll</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- ── DEFINITIONS ── -->
+<section class="definitions reveal" id="definitions">
+  <div class="def-card def-chronic">
+    <div class="def-tag">Chronic</div>
+    <div class="def-word">Persistent.<br>Structural.<br>Systemic.</div>
+    <p class="def-text">Chronic food insecurity is the continuous or recurrent lack of access to sufficient food over a prolonged period — typically defined as lasting 12 months or longer. It is rooted in deep structural inequalities: poverty, lack of land, limited income, poor infrastructure, and social exclusion. People experiencing chronic food insecurity are unable to meet their minimum dietary energy requirements consistently, leading to malnutrition, stunting, and long-term health deterioration.</p>
+    <div class="def-quote">"Chronic hunger is not about food availability — it's about entitlement failure. People lack the purchasing power, land, or social support to access food that exists around them." — Amartya Sen, adapted</div>
+  </div>
+  <div class="def-card def-acute">
+    <div class="def-tag">Acute</div>
+    <div class="def-word">Sudden.<br>Severe.<br>Urgent.</div>
+    <p class="def-text">Acute food insecurity refers to a severe, sudden deterioration in food security status that threatens lives and livelihoods. It is characterized by an urgency of response — the situation is bad enough right now that immediate action is required to prevent death, destitution, or complete collapse of food systems. Acute crises are assessed using the Integrated Food Security Phase Classification (IPC), with Phase 3 (Crisis), 4 (Emergency), and 5 (Famine/Catastrophe) demanding immediate humanitarian intervention.</p>
+    <div class="def-quote">"Acute food insecurity differs from chronic hunger in both the speed of deterioration and the immediate life-threatening nature of the situation it creates." — IPC Technical Manual</div>
+  </div>
+</section>
+
+<!-- ── CAUSES ── -->
+<section class="section reveal" id="causes">
+  <div class="section-label">Root Causes</div>
+  <div class="section-title">Why does food insecurity happen?</div>
+  <p class="section-intro">The causes of chronic and acute food insecurity are fundamentally different — one emerges slowly from systemic failures, the other erupts from sudden shocks. Understanding the difference is critical for designing effective interventions.</p>
+
+  <div class="causes-grid">
+    <div class="causes-col causes-chronic">
+      <div class="causes-col-header">
+        <div class="dot dot-chronic"></div>
+        Causes of Chronic Food Insecurity
+      </div>
+
+      <div class="cause-item cause-chronic reveal">
+        <div class="cause-icon">🏚</div>
+        <div>
+          <div class="cause-title">Structural Poverty</div>
+          <div class="cause-desc">Generational cycles of poverty leave households unable to consistently afford nutritious food. Low wages, unemployment, and lack of assets create a baseline of deprivation with no seasonal relief.</div>
+        </div>
+      </div>
+
+      <div class="cause-item cause-chronic reveal">
+        <div class="cause-icon">🌾</div>
+        <div>
+          <div class="cause-title">Land Inequality & Landlessness</div>
+          <div class="cause-desc">Millions of rural households have no access to arable land due to historical inequalities, colonial land grabs, or tenure insecurity. Without land, agricultural communities cannot produce their own food.</div>
+        </div>
+      </div>
+
+      <div class="cause-item cause-chronic reveal">
+        <div class="cause-icon">📉</div>
+        <div>
+          <div class="cause-title">Inadequate Social Protection</div>
+          <div class="cause-desc">In many low-income countries, social safety nets are absent or too weak to prevent persistent hunger. Without transfers, subsidies, or food assistance programmes, vulnerable groups fall through the cracks.</div>
+        </div>
+      </div>
+
+      <div class="cause-item cause-chronic reveal">
+        <div class="cause-icon">🚰</div>
+        <div>
+          <div class="cause-title">Poor Infrastructure & Market Access</div>
+          <div class="cause-desc">Remote communities lack roads, storage facilities, and access to markets. Perishable crops rot before they can be sold. High transport costs inflate food prices beyond what poor households can pay.</div>
+        </div>
+      </div>
+
+      <div class="cause-item cause-chronic reveal">
+        <div class="cause-icon">📚</div>
+        <div>
+          <div class="cause-title">Low Agricultural Productivity</div>
+          <div class="cause-desc">Smallholder farmers without access to improved seeds, fertilizer, irrigation, or extension services produce too little to feed their families and enter markets — trapping them in subsistence poverty.</div>
+        </div>
+      </div>
+
+      <div class="cause-item cause-chronic reveal">
+        <div class="cause-icon">⚥</div>
+        <div>
+          <div class="cause-title">Gender Inequality</div>
+          <div class="cause-desc">Women and girls face disproportionate food insecurity due to discriminatory social norms, unequal land rights, lower wages, and the burden of unpaid care work — often eating last and least within households.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="causes-col causes-acute">
+      <div class="causes-col-header">
+        <div class="dot dot-acute"></div>
+        Causes of Acute Food Insecurity
+      </div>
+
+      <div class="cause-item cause-acute reveal">
+        <div class="cause-icon">⚔️</div>
+        <div>
+          <div class="cause-title">Armed Conflict & War</div>
+          <div class="cause-desc">Conflict is the single largest driver of acute food crises. Fighting destroys crops, livestock, and infrastructure; displaces farming populations; restricts trade routes; and is sometimes used as a deliberate weapon of war.</div>
+        </div>
+      </div>
+
+      <div class="cause-item cause-acute reveal">
+        <div class="cause-icon">🌊</div>
+        <div>
+          <div class="cause-title">Natural Disasters & Climate Shocks</div>
+          <div class="cause-desc">Floods, droughts, cyclones, and locust invasions can wipe out entire harvests in weeks. Climate change is increasing the frequency and severity of these events, compressing the time between crises.</div>
+        </div>
+      </div>
+
+      <div class="cause-item cause-acute reveal">
+        <div class="cause-icon">📈</div>
+        <div>
+          <div class="cause-title">Economic Shocks & Price Spikes</div>
+          <div class="cause-desc">Sudden currency collapse, trade disruptions, global commodity price shocks, or sanctions can render food unaffordable overnight — as seen during the 2007–08 food price crisis and after Russia's invasion of Ukraine.</div>
+        </div>
+      </div>
+
+      <div class="cause-item cause-acute reveal">
+        <div class="cause-icon">🦠</div>
+        <div>
+          <div class="cause-title">Pandemics & Health Emergencies</div>
+          <div class="cause-desc">Epidemics and pandemics disrupt supply chains, close markets, destroy livelihoods, and redirect humanitarian resources. COVID-19 pushed tens of millions into acute food crisis in 2020–21.</div>
+        </div>
+      </div>
+
+      <div class="cause-item cause-acute reveal">
+        <div class="cause-icon">🔀</div>
+        <div>
+          <div class="cause-title">Displacement & Refugee Crises</div>
+          <div class="cause-desc">Mass displacement severs people from their land, livestock, income, and food systems simultaneously. Refugee camps are often critically under-resourced, pushing occupants into acute starvation.</div>
+        </div>
+      </div>
+
+      <div class="cause-item cause-acute reveal">
+        <div class="cause-icon">🚫</div>
+        <div>
+          <div class="cause-title">Blockades & Humanitarian Access Denial</div>
+          <div class="cause-desc">Deliberate restriction of food imports, blockades of ports, or denial of humanitarian access can rapidly collapse food availability in affected regions — a form of collective punishment with devastating consequences.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── OVERLAP NOTE ── -->
+<div class="overlap-section reveal">
+  <div class="overlap-inner">
+    <div class="overlap-icon">⚡</div>
+    <div>
+      <div class="overlap-title">These two crises often collide</div>
+      <p class="overlap-text">Chronic food insecurity creates underlying vulnerability that amplifies the impact of acute shocks. A population already weakened by years of malnutrition has almost no resilience when disaster strikes. Equally, repeated acute crises can permanently entrench chronic food insecurity — destroying assets, disrupting education, and breaking intergenerational cycles of recovery. <strong>The two are not independent: they reinforce each other.</strong> In much of sub-Saharan Africa and South Asia, families face both simultaneously.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── TIMELINE ── -->
+<section class="timeline-section reveal" id="timeline">
+  <div class="section-label">Temporal Profile</div>
+  <div class="section-title" style="color:#FAF8F4;">How each crisis unfolds over time</div>
+  <p class="section-intro">The most fundamental difference between chronic and acute food insecurity is their relationship with time — one erodes slowly across years and decades; the other collapses suddenly within days or weeks.</p>
+
+  <div class="timeline-wrap">
+    <div class="timeline-col">
+      <div class="tl-header tl-chronic-hdr">Chronic — The Slow Erosion</div>
+
+      <div class="timeline-entry te-chronic reveal">
+        <div class="te-time">Years 1–5</div>
+        <div class="te-text"><strong>Latent deprivation.</strong> Households consistently fall short on calories. Children miss meals. Adults skip food to feed children. No dramatic crisis — just persistent inadequacy that slowly damages health and development.</div>
+      </div>
+
+      <div class="timeline-entry te-chronic reveal">
+        <div class="te-time">Years 5–10</div>
+        <div class="te-text"><strong>Nutritional damage accumulates.</strong> Children show stunted growth. Cognitive development is impaired. Immune systems weaken. Girls are pulled from school to help gather food or earn income. Generational poverty deepens.</div>
+      </div>
+
+      <div class="timeline-entry te-chronic reveal">
+        <div class="te-time">Years 10–20</div>
+        <div class="te-text"><strong>Structural lock-in.</strong> Malnourished children become less productive adults. Low human capital perpetuates poverty. Communities lose resilience. Any single shock — drought, illness, job loss — can push households into acute crisis with no buffer.</div>
+      </div>
+
+      <div class="timeline-entry te-chronic reveal">
+        <div class="te-time">Intergenerational</div>
+        <div class="te-text"><strong>The cycle repeats.</strong> Malnourished mothers give birth to low-weight babies. Those children face cognitive and physical disadvantages from birth. Without systemic change, the cycle continues across generations indefinitely.</div>
+      </div>
+    </div>
+
+    <div class="timeline-center">
+      <div class="timeline-line"></div>
+    </div>
+
+    <div class="timeline-col">
+      <div class="tl-header tl-acute-hdr">Acute — The Sudden Collapse</div>
+
+      <div class="timeline-entry te-acute reveal">
+        <div class="te-time">Days 1–14: Shock Onset</div>
+        <div class="te-text"><strong>Triggering event hits.</strong> A conflict erupts, a cyclone destroys harvests, a price spike makes food unaffordable. Food supply or access collapses rapidly. The window for preventing deaths begins closing immediately.</div>
+      </div>
+
+      <div class="timeline-entry te-acute reveal">
+        <div class="te-time">Weeks 2–8: Crisis Deepens</div>
+        <div class="te-text"><strong>Coping strategies are exhausted.</strong> Households sell assets (livestock, tools, jewelry). They reduce meal frequency drastically. Wild foods and emergency rations are consumed. Malnutrition cases surge in health facilities.</div>
+      </div>
+
+      <div class="timeline-entry te-acute reveal">
+        <div class="te-time">Months 2–6: Emergency Phase</div>
+        <div class="te-text"><strong>Mortality rises.</strong> Children under 5 and elderly face the highest risk. Famine conditions may be declared. Humanitarian operations scale up. Food assistance, therapeutic feeding centres, and cash transfers are deployed urgently.</div>
+      </div>
+
+      <div class="timeline-entry te-acute reveal">
+        <div class="te-time">Post-crisis</div>
+        <div class="te-text"><strong>Recovery or chronic entrenchment.</strong> With adequate response, acute crises can resolve within months. Without intervention — or if the underlying shock (conflict) persists — acute food insecurity can become chronic, permanently resetting baseline deprivation.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── EXAMPLES ── -->
+<section class="examples-section reveal" id="examples">
+  <div class="section-label">Real-World Cases</div>
+  <div class="section-title">Chronic and acute crises across the globe</div>
+  <p class="section-intro">Abstract definitions become clearer when grounded in specific places and populations. These cases illustrate how the two types of food insecurity manifest in practice.</p>
+
+  <div class="examples-grid">
+
+    <div class="example-card ec-chronic reveal">
+      <div class="example-top"></div>
+      <div class="example-body">
+        <div class="example-region">Sub-Saharan Africa</div>
+        <div class="example-title">The Sahel — A Decade of Chronic Hunger</div>
+        <p class="example-text">Across Burkina Faso, Mali, Niger, and Chad, tens of millions live in persistent food insecurity driven by extreme poverty, limited arable land, low productivity, and weak state capacity. Families here have gone hungry not for weeks, but for decades. Children face stunting rates above 40% in some areas — not because food is unavailable, but because families lack the income to buy it or land to grow it. This is structural poverty creating chronic hunger.</p>
+        <div class="example-tags">
+          <span class="tag tag-chronic">Chronic</span>
+          <span class="tag tag-neutral">Poverty-driven</span>
+          <span class="tag tag-neutral">Intergenerational</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="example-card ec-acute reveal">
+      <div class="example-top"></div>
+      <div class="example-body">
+        <div class="example-region">East Africa / Horn of Africa</div>
+        <div class="example-title">Somalia 2022 — Near-Famine</div>
+        <p class="example-text">In 2022, Somalia experienced its worst drought in 40 years, compounded by the ongoing Al-Shabaab conflict and global food price spikes from the Ukraine war. Millions were pushed into IPC Phase 4 (Emergency) conditions within months. Some areas reached IPC Phase 5 (Catastrophe). This was a textbook acute crisis: a sudden, severe deterioration requiring immediate humanitarian response to prevent mass starvation deaths.</p>
+        <div class="example-tags">
+          <span class="tag tag-acute">Acute</span>
+          <span class="tag tag-neutral">Conflict + drought</span>
+          <span class="tag tag-neutral">IPC Phase 4–5</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="example-card ec-chronic reveal">
+      <div class="example-top"></div>
+      <div class="example-body">
+        <div class="example-region">South Asia</div>
+        <div class="example-title">India — Hidden Chronic Hunger</div>
+        <p class="example-text">Despite rapid economic growth, India ranks 111th on the 2023 Global Hunger Index. Over 190 million people are chronically undernourished, concentrated in states like Jharkhand, Bihar, and Uttar Pradesh. India's chronic hunger is the result of caste discrimination, landlessness among Dalits and Adivasis, low agricultural wages, and gender inequality — not food unavailability. The country produces enough food; the problem is access and distribution.</p>
+        <div class="example-tags">
+          <span class="tag tag-chronic">Chronic</span>
+          <span class="tag tag-neutral">Access inequality</span>
+          <span class="tag tag-neutral">Structural</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="example-card ec-acute reveal">
+      <div class="example-top"></div>
+      <div class="example-body">
+        <div class="example-region">Middle East</div>
+        <div class="example-title">Gaza 2023–24 — Conflict-Driven Famine</div>
+        <p class="example-text">The Israeli military offensive in Gaza following October 2023 created one of the fastest deteriorations of food security ever documented. The blockade of food and aid, destruction of agricultural land, and mass displacement pushed the entire population into acute crisis. By early 2024, the IPC Famine Review Committee warned of imminent famine — the direct result of conflict-driven disruption of food systems and restricted humanitarian access.</p>
+        <div class="example-tags">
+          <span class="tag tag-acute">Acute</span>
+          <span class="tag tag-neutral">Conflict-induced</span>
+          <span class="tag tag-neutral">Blockade</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="example-card ec-both reveal">
+      <div class="example-top"></div>
+      <div class="example-body">
+        <div class="example-region">Central America</div>
+        <div class="example-title">Dry Corridor — Chronic with Acute Spikes</div>
+        <p class="example-text">Honduras, Guatemala, El Salvador, and Nicaragua's "Dry Corridor" experiences chronic food insecurity year-round due to poverty and land inequality, interspersed with acute crises when El Niño droughts devastate harvests. The dual burden drives mass migration to the US and Mexico. This case illustrates how the two types interact: chronic vulnerability means any shock creates immediate acute crisis with no household resilience buffer.</p>
+        <div class="example-tags">
+          <span class="tag tag-chronic">Chronic</span>
+          <span class="tag tag-acute">Acute spikes</span>
+          <span class="tag tag-neutral">Migration driver</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="example-card ec-acute reveal">
+      <div class="example-top"></div>
+      <div class="example-body">
+        <div class="example-region">East Africa</div>
+        <div class="example-title">South Sudan — Conflict & Famine</div>
+        <p class="example-text">South Sudan has experienced recurrent acute food emergencies since independence, with IPC Famine declared in 2017 — the first famine declaration in 6 years globally. The cause: civil war destroying agricultural production, displacing 4 million people, and collapsing the market system. Humanitarian access was deliberately restricted. At peak, 100,000 people faced catastrophic IPC Phase 5 conditions and starvation deaths.</p>
+        <div class="example-tags">
+          <span class="tag tag-acute">Acute</span>
+          <span class="tag tag-neutral">Famine declared</span>
+          <span class="tag tag-neutral">IPC Phase 5</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── COMPARISON TABLE ── -->
+<section class="compare-section reveal">
+  <div class="section-label">Side by Side</div>
+  <div class="section-title">Comparing the two types across key dimensions</div>
+
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th class="th-dim">Dimension</th>
+        <th class="th-chronic">Chronic Food Insecurity</th>
+        <th class="th-acute">Acute Food Insecurity</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="td-dim">Duration</td>
+        <td class="td-chronic">Persistent — months to decades, often lifelong or intergenerational</td>
+        <td class="td-acute">Sudden and short-term — weeks to months, but can become chronic</td>
+      </tr>
+      <tr>
+        <td class="td-dim">Primary cause</td>
+        <td class="td-chronic">Structural poverty, inequality, limited assets, poor markets</td>
+        <td class="td-acute">Conflict, natural disasters, economic shocks, epidemics</td>
+      </tr>
+      <tr>
+        <td class="td-dim">Speed of onset</td>
+        <td class="td-chronic">Gradual — often invisible, develops over years</td>
+        <td class="td-acute">Rapid — can develop within days or weeks of a triggering event</td>
+      </tr>
+      <tr>
+        <td class="td-dim">Severity indicator</td>
+        <td class="td-chronic">Stunting, wasting, micronutrient deficiencies, low dietary diversity</td>
+        <td class="td-acute">IPC Phase 3–5: excess mortality, global acute malnutrition (GAM), asset depletion</td>
+      </tr>
+      <tr>
+        <td class="td-dim">Who is affected</td>
+        <td class="td-chronic">Typically the poorest, most marginalized — often women, children, ethnic minorities</td>
+        <td class="td-acute">Entire communities or regions; affects previously food-secure households</td>
+      </tr>
+      <tr>
+        <td class="td-dim">Response type</td>
+        <td class="td-chronic">Long-term development: social protection, agricultural investment, education, land reform</td>
+        <td class="td-acute">Short-term humanitarian: food aid, cash transfers, therapeutic feeding, medical response</td>
+      </tr>
+      <tr>
+        <td class="td-dim">Key actors</td>
+        <td class="td-chronic">Development agencies, governments, NGOs, World Bank, FAO</td>
+        <td class="td-acute">WFP, UNHCR, ICRC, MSF, UN OCHA, bilateral humanitarian donors</td>
+      </tr>
+      <tr>
+        <td class="td-dim">Measurement tool</td>
+        <td class="td-chronic">FAO prevalence of undernourishment (PoU), Global Hunger Index (GHI), HDDS</td>
+        <td class="td-acute">IPC / Cadre Harmonisé (CH), FEWS NET alerts, Global Acute Malnutrition rates</td>
+      </tr>
+      <tr>
+        <td class="td-dim">Resolution pathway</td>
+        <td class="td-chronic">Structural transformation — economic development, inequality reduction, decades-long process</td>
+        <td class="td-acute">Shock removal + humanitarian response can resolve in months, if access is adequate</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ── CONSEQUENCES ── -->
+<section class="consequences-section reveal" id="consequences">
+  <div class="section-label">Human Impact</div>
+  <div class="section-title">The consequences of each crisis type</div>
+  <p class="section-intro">Both forms of food insecurity devastate lives — but through different mechanisms, across different timelines, with different but equally catastrophic long-term effects on individuals, families, and societies.</p>
+
+  <div class="cons-grid">
+    <div class="cons-card cons-chronic reveal">
+      <div class="cons-header">
+        <div class="cons-header-tag">Chronic Impact</div>
+        <div class="cons-header-title">The Hidden Violence of Persistent Hunger</div>
+      </div>
+      <div class="cons-body">
+        <div class="cons-item">
+          <div class="cons-marker"></div>
+          <div>
+            <div class="cons-item-title">Stunting & Physical Underdevelopment</div>
+            <div class="cons-item-text">Chronic undernourishment in the first 1,000 days of life causes permanent stunting — children are shorter than they should be, with irreversibly compromised physical development that cannot be fully reversed.</div>
+          </div>
+        </div>
+        <div class="cons-item">
+          <div class="cons-marker"></div>
+          <div>
+            <div class="cons-item-title">Cognitive Impairment & Learning Loss</div>
+            <div class="cons-item-text">Insufficient protein, iron, iodine, and zinc during critical developmental windows permanently impairs brain development, reducing IQ, school attendance, and lifetime earning potential.</div>
+          </div>
+        </div>
+        <div class="cons-item">
+          <div class="cons-marker"></div>
+          <div>
+            <div class="cons-item-title">Weakened Immune Systems</div>
+            <div class="cons-item-text">Chronically malnourished individuals are far more vulnerable to infectious disease. Malnutrition and illness form a deadly synergy — each worsening the other, creating a downward spiral.</div>
+          </div>
+        </div>
+        <div class="cons-item">
+          <div class="cons-marker"></div>
+          <div>
+            <div class="cons-item-title">Reduced Economic Productivity</div>
+            <div class="cons-item-text">Malnourished adults are less productive. At the macro level, chronic hunger can reduce GDP by 2–3% annually in heavily affected countries — a structural economic drag perpetuating poverty cycles.</div>
+          </div>
+        </div>
+        <div class="cons-item">
+          <div class="cons-marker"></div>
+          <div>
+            <div class="cons-item-title">Intergenerational Cycle</div>
+            <div class="cons-item-text">Malnourished women give birth to underweight babies. Those babies face worse developmental outcomes. Without intervention, the cycle repeats — hunger becoming hereditary through biological and social pathways.</div>
+          </div>
+        </div>
+        <div class="cons-item">
+          <div class="cons-marker"></div>
+          <div>
+            <div class="cons-item-title">Mental Health Consequences</div>
+            <div class="cons-item-text">The chronic stress of food insecurity — constant uncertainty, anxiety, and the stigma of poverty — creates significant mental health burdens, with elevated rates of depression and anxiety documented globally.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cons-card cons-acute reveal">
+      <div class="cons-header">
+        <div class="cons-header-tag">Acute Impact</div>
+        <div class="cons-header-title">The Immediate Crisis of Sudden Collapse</div>
+      </div>
+      <div class="cons-body">
+        <div class="cons-item">
+          <div class="cons-marker"></div>
+          <div>
+            <div class="cons-item-title">Starvation & Famine Mortality</div>
+            <div class="cons-item-text">In the most severe acute crises (IPC Phase 5), people die of starvation and hunger-related disease. Famines have killed millions — from Bengal 1943 to Ethiopia 1984 to Somalia 2011, where 260,000 died in months.</div>
+          </div>
+        </div>
+        <div class="cons-item">
+          <div class="cons-marker"></div>
+          <div>
+            <div class="cons-item-title">Severe Acute Malnutrition (SAM)</div>
+            <div class="cons-item-text">Children in acute crises can rapidly develop SAM — a life-threatening condition with a wasted, emaciated appearance and a case fatality rate of 20–30% if untreated. SAM requires immediate therapeutic feeding.</div>
+          </div>
+        </div>
+        <div class="cons-item">
+          <div class="cons-marker"></div>
+          <div>
+            <div class="cons-item-title">Asset Depletion & Livelihood Collapse</div>
+            <div class="cons-item-text">Desperate households sell productive assets — livestock, tools, land — to buy food. This depletes the capital base needed for future recovery, trapping households in long-term poverty even after the crisis ends.</div>
+          </div>
+        </div>
+        <div class="cons-item">
+          <div class="cons-marker"></div>
+          <div>
+            <div class="cons-item-title">Displacement & Refugee Flows</div>
+            <div class="cons-item-text">Acute food crises drive mass displacement. People flee in search of food — becoming internally displaced or international refugees, placing pressure on host communities and humanitarian systems.</div>
+          </div>
+        </div>
+        <div class="cons-item">
+          <div class="cons-marker"></div>
+          <div>
+            <div class="cons-item-title">Social Fabric Destruction</div>
+            <div class="cons-item-text">Acute crises rupture social networks, community institutions, and traditional support systems. Trust breaks down. Social cohesion collapses. This destruction of social capital has long-lasting effects on recovery capacity.</div>
+          </div>
+        </div>
+        <div class="cons-item">
+          <div class="cons-marker"></div>
+          <div>
+            <div class="cons-item-title">Chronic Entrenchment After Crisis</div>
+            <div class="cons-item-text">Poorly recovered acute crises become chronic conditions. The asset depletion, trauma, and infrastructure damage of a famine or conflict can reset a region's food security baseline permanently to a worse level.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── DATA VIZ ── -->
+<section class="data-section reveal">
+  <div class="section-label">Scale & Scope</div>
+  <div class="section-title">The numbers behind the crisis</div>
+  <p class="section-intro">Chronic food insecurity dwarfs acute food insecurity in scale — but acute crises demand the fastest response. Understanding both dimensions is essential for effective prioritization and funding allocation.</p>
+
+  <div class="data-visual">
+    <div class="data-bar-wrap">
+      <div class="data-bar-container">
+        <div class="data-bar bar-chronic" style="height: 88%;"></div>
+      </div>
+      <div class="data-bar-val dv-chronic">733M</div>
+      <div class="data-bar-label">Chronically<br>undernourished</div>
+    </div>
+    <div class="data-bar-wrap">
+      <div class="data-bar-container">
+        <div class="data-bar bar-acute" style="height: 34%;"></div>
+      </div>
+      <div class="data-bar-val dv-acute">282M</div>
+      <div class="data-bar-label">In acute food<br>crisis or worse</div>
+    </div>
+    <div class="data-bar-wrap">
+      <div class="data-bar-container">
+        <div class="data-bar" style="height: 10%; background: linear-gradient(to top, #2D1B0E, #8B4513);"></div>
+      </div>
+      <div class="data-bar-val" style="color: #5A3A20;">36.4M</div>
+      <div class="data-bar-label">In IPC Phase 4–5<br>Emergency/Catastrophe</div>
+    </div>
+
+    <div class="data-info">
+      <div class="di-item">
+        <div class="di-num di-chronic">9.1%</div>
+        <div class="di-label">of humanity is chronically food insecure — a figure that has risen every year since 2015</div>
+      </div>
+      <div class="di-item">
+        <div class="di-num di-acute">59</div>
+        <div class="di-label">countries experiencing acute food crises in 2023, a record high</div>
+      </div>
+      <div class="di-item">
+        <div class="di-num" style="color: var(--muted);">$42B</div>
+        <div class="di-label">annual cost of global child malnutrition to national economies — chronic hunger's invisible tax</div>
+      </div>
+      <div class="di-item">
+        <div class="di-num" style="color: var(--muted); font-size: 28px;">3.1B</div>
+        <div class="di-label">people cannot afford a healthy diet — the structural driver of chronic food insecurity</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── RESPONSE STRATEGIES ── -->
+<section class="response-section reveal" id="response">
+  <div class="section-label">Intervention</div>
+  <div class="section-title" style="color:#FAF8F4;">How we respond to each type</div>
+  <p class="section-intro">Interventions must match the nature of the crisis. Sending emergency food aid to a chronically food insecure community doesn't solve the underlying problem. Launching long-term development programmes in an active famine saves no one.</p>
+
+  <div class="response-grid">
+    <div class="response-col">
+      <div class="response-col-title rc-chronic">Addressing Chronic Food Insecurity</div>
+
+      <div class="response-item">
+        <div class="ri-num ri-chronic">1</div>
+        <div>
+          <div class="ri-title">Social Protection Systems</div>
+          <div class="ri-text">Conditional and unconditional cash transfers, food stamps, school feeding programmes, and targeted nutrition supplements create a floor below which households cannot fall, breaking the poverty trap that drives chronic hunger.</div>
+        </div>
+      </div>
+
+      <div class="response-item">
+        <div class="ri-num ri-chronic">2</div>
+        <div>
+          <div class="ri-title">Agricultural Productivity Investment</div>
+          <div class="ri-text">Supporting smallholder farmers with improved seeds, fertilizer subsidies, irrigation, and extension services raises yields, incomes, and food availability simultaneously — addressing supply and demand constraints.</div>
+        </div>
+      </div>
+
+      <div class="response-item">
+        <div class="ri-num ri-chronic">3</div>
+        <div>
+          <div class="ri-title">Land Reform & Tenure Security</div>
+          <div class="ri-text">Redistributing land, formalizing tenure rights (especially for women), and breaking up large land monopolies gives marginalized communities the productive assets needed for self-sufficiency.</div>
+        </div>
+      </div>
+
+      <div class="response-item">
+        <div class="ri-num ri-chronic">4</div>
+        <div>
+          <div class="ri-title">Nutrition-Specific Interventions</div>
+          <div class="ri-text">Micronutrient supplementation, biofortification of staple crops, breastfeeding promotion, and complementary feeding programmes address the "hidden hunger" of micronutrient deficiencies prevalent in chronically food insecure populations.</div>
+        </div>
+      </div>
+
+      <div class="response-item">
+        <div class="ri-num ri-chronic">5</div>
+        <div>
+          <div class="ri-title">Women's Empowerment</div>
+          <div class="ri-text">Closing the gender gap in agricultural assets, credit access, and decision-making is one of the highest-return investments in food security. When women control food budgets, child nutrition improves dramatically.</div>
+        </div>
+      </div>
+
+      <div class="response-item">
+        <div class="ri-num ri-chronic">6</div>
+        <div>
+          <div class="ri-title">Food System Transformation</div>
+          <div class="ri-text">Sustainable intensification, reducing post-harvest losses (up to 40% in some regions), strengthening local markets, and building cold-chain infrastructure makes food systems more productive and resilient long-term.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="response-col">
+      <div class="response-col-title rc-acute">Responding to Acute Food Crises</div>
+
+      <div class="response-item">
+        <div class="ri-num ri-acute">1</div>
+        <div>
+          <div class="ri-title">Emergency Food Assistance</div>
+          <div class="ri-text">WFP and partners provide direct food aid — ready-to-use therapeutic foods (RUTF), general food distributions, and in-kind rations — to populations in IPC Phase 3+ who cannot access food through markets or own production.</div>
+        </div>
+      </div>
+
+      <div class="response-item">
+        <div class="ri-num ri-acute">2</div>
+        <div>
+          <div class="ri-title">Emergency Cash Transfers</div>
+          <div class="ri-text">When markets are functioning, cash and voucher assistance allows affected populations to purchase food locally — faster, more dignified, and often cheaper than in-kind food delivery, while stimulating local economies.</div>
+        </div>
+      </div>
+
+      <div class="response-item">
+        <div class="ri-num ri-acute">3</div>
+        <div>
+          <div class="ri-title">Therapeutic Feeding Programmes</div>
+          <div class="ri-text">Community-based management of acute malnutrition (CMAM) and therapeutic feeding centres treat children with severe acute malnutrition using RUTF and medical protocols, with survival rates above 90% when well-implemented.</div>
+        </div>
+      </div>
+
+      <div class="response-item">
+        <div class="ri-num ri-acute">4</div>
+        <div>
+          <div class="ri-title">Conflict Resolution & Peace</div>
+          <div class="ri-text">Since conflict drives 60%+ of acute food crises, political solutions — ceasefires, peace agreements, conflict mediation — are ultimately the most powerful "food security interventions" available, though the hardest to achieve.</div>
+        </div>
+      </div>
+
+      <div class="response-item">
+        <div class="ri-num ri-acute">5</div>
+        <div>
+          <div class="ri-title">Famine Early Warning Systems</div>
+          <div class="ri-text">FEWS NET, IPC, and national early warning systems monitor food security indicators to identify deteriorating situations months before they become famines — allowing preemptive action that is far cheaper and more effective than reactive response.</div>
+        </div>
+      </div>
+
+      <div class="response-item">
+        <div class="ri-num ri-acute">6</div>
+        <div>
+          <div class="ri-title">Humanitarian Access Negotiation</div>
+          <div class="ri-text">In conflict settings, humanitarian organisations negotiate with all parties for guaranteed access to deliver assistance. Denial of access is a violation of international humanitarian law — and in many acute crises, access is the binding constraint.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <p style="font-family:'Playfair Display',serif; font-size: 24px; font-weight:700; color: #E0E0E0; margin-bottom: 20px;">Hunger is not inevitable.</p>
+  <p>This page draws on data and frameworks from the <strong>FAO</strong>, <strong>WFP</strong>, <strong>IPC Global Platform</strong>, <strong>FEWS NET</strong>, and the <strong>Global Hunger Index</strong>.</p>
+  <p style="margin-top: 12px;">Statistics reflect 2023–2024 figures. The IPC framework is the global standard for classifying acute food insecurity severity.</p>
+  <p style="margin-top: 24px; font-size: 12px; color: #4A4A4A;">Designed to explain. Built to inform. Hunger requires understanding before it can be ended.</p>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('revealed');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  reveals.forEach(el => io.observe(el));
+</script>
+</body>
+</html>
