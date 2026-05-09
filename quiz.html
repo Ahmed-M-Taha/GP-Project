@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Food Insecurity — Quiz Edition</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+  --cream:#F5F0E8;
+  --warm-white:#FAF8F4;
+  --charcoal:#1C1C1C;
+
+  --mid:#4A4A4A;
+  --muted:#8A8680;
+
+  --chronic-dark:#2D1B0E;
+  --chronic-mid:#8B4513;
+  --chronic-light:#D4956A;
+  --chronic-pale:#F5E6D3;
+
+  --acute-dark:#0A1628;
+  --acute-mid:#1A4A7A;
+  --acute-light:#4A90D9;
+  --acute-pale:#D6E9F8;
+
+  --border:rgba(0,0,0,0.08);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  font-family:'DM Sans', sans-serif;
+  background:var(--warm-white);
+  color:var(--charcoal);
+  overflow-x:hidden;
+}
+
+/* NAV */
+
+nav{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+
+  z-index:1000;
+
+  height:70px;
+
+  background:
+  rgba(250,248,244,0.92);
+
+  backdrop-filter:blur(10px);
+
+  border-bottom:
+  1px solid var(--border);
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  padding:0 5%;
+}
+
+.nav-logo{
+  font-family:'Playfair Display', serif;
+  font-size:20px;
+  font-weight:700;
+}
+
+.nav-links{
+  display:flex;
+  gap:28px;
+  list-style:none;
+}
+
+.nav-links a{
+  text-decoration:none;
+  color:var(--mid);
+
+  font-size:12px;
+  font-weight:600;
+
+  letter-spacing:1px;
+  text-transform:uppercase;
+
+  transition:0.25s;
+}
+
+.nav-links a:hover{
+  color:black;
+}
+
+/* HERO */
+
+.hero{
+  min-height:100vh;
+
+  display:grid;
+  grid-template-columns:1fr 1fr;
+
+  padding-top:70px;
+}
+
+.hero-left,
+.hero-right{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+
+  padding:80px 8%;
+}
+
+.hero-left{
+  background:#1B1510;
+}
+
+.hero-right{
+  background:var(--acute-dark);
+}
+
+.hero-eyebrow{
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:2px;
+
+  margin-bottom:24px;
+}
+
+.hero-left .hero-eyebrow{
+  color:var(--chronic-light);
+}
+
+.hero-right .hero-eyebrow{
+  color:var(--acute-light);
+}
+
+.hero-title{
+  font-family:'Playfair Display', serif;
+  font-size:clamp(40px,6vw,78px);
+  font-weight:900;
+  line-height:1.05;
+
+  margin-bottom:28px;
+}
+
+.hero-left .hero-title{
+  color:white;
+}
+
+.hero-right .hero-title{
+  color:white;
+}
+
+.hero-title span{
+  font-style:italic;
+}
+
+.hero-left .hero-title span{
+  color:var(--chronic-light);
+}
+
+.hero-right .hero-title span{
+  color:var(--acute-light);
+}
+
+.hero-desc{
+  font-size:16px;
+  line-height:1.9;
+  max-width:520px;
+}
+
+.hero-left .hero-desc{
+  color:#B8A898;
+}
+
+.hero-right .hero-desc{
+  color:#A6C4E6;
+}
+
+/* GENERIC SECTION */
+
+section{
+  padding:90px 6%;
+}
+
+.section-label{
+  font-size:11px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+
+  color:var(--muted);
+
+  margin-bottom:16px;
+}
+
+.section-title{
+  font-family:'Playfair Display', serif;
+  font-size:clamp(32px,5vw,56px);
+  line-height:1.15;
+
+  margin-bottom:22px;
+}
+
+.section-intro{
+  max-width:760px;
+  line-height:1.9;
+  color:var(--mid);
+}
+
+/* DEFINITIONS */
+
+.definitions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:2px;
+
+  background:var(--cream);
+}
+
+.def-card{
+  padding:60px 50px;
+}
+
+.def-chronic{
+  background:var(--chronic-pale);
+}
+
+.def-acute{
+  background:var(--acute-pale);
+}
+
+.def-tag{
+  display:inline-block;
+
+  padding:6px 14px;
+
+  border-radius:50px;
+
+  font-size:11px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+
+  margin-bottom:28px;
+}
+
+.def-chronic .def-tag{
+  background:var(--chronic-dark);
+  color:var(--chronic-light);
+}
+
+.def-acute .def-tag{
+  background:var(--acute-dark);
+  color:var(--acute-light);
+}
+
+.def-word{
+  font-family:'Playfair Display', serif;
+  font-size:48px;
+  line-height:1.05;
+
+  margin-bottom:24px;
+}
+
+.def-text{
+  line-height:1.9;
+  color:var(--mid);
+}
+
+/* QUIZ SECTION */
+
+.quiz-section{
+  background:
+  linear-gradient(
+    135deg,
+    #151515 0%,
+    #1E1815 100%
+  );
+
+  color:white;
+}
+
+.quiz-section .section-label{
+  color:#888;
+}
+
+.quiz-section .section-title{
+  color:white;
+}
+
+.quiz-section .section-intro{
+  color:#B0B0B0;
+}
+
+.quiz-auth-card,
+.quiz-container{
+
+  margin-top:50px;
+
+  background:
+  rgba(255,255,255,0.04);
+
+  border:
+  1px solid rgba(255,255,255,0.08);
+
+  border-radius:24px;
+
+  padding:40px;
+
+  backdrop-filter:blur(10px);
+}
+
+.quiz-label{
+  display:block;
+
+  margin-bottom:12px;
+
+  font-size:12px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+
+  color:var(--acute-light);
+}
+
+.quiz-input{
+  width:100%;
+
+  padding:16px;
+
+  border-radius:14px;
+
+  border:
+  1px solid rgba(255,255,255,0.1);
+
+  background:
+  rgba(255,255,255,0.05);
+
+  color:white;
+
+  font-size:15px;
+}
+
+.quiz-input:focus{
+  outline:none;
+  border-color:var(--acute-light);
+}
+
+.quiz-btn{
+  margin-top:18px;
+
+  padding:14px 24px;
+
+  border:none;
+  border-radius:14px;
+
+  cursor:pointer;
+
+  font-weight:700;
+  font-size:14px;
+
+  color:white;
+
+  background:
+  linear-gradient(
+    90deg,
+    var(--chronic-mid),
+    var(--acute-light)
+  );
+
+  transition:0.25s;
+}
+
+.quiz-btn:hover{
+  transform:translateY(-2px);
+}
+
+.quiz-note{
+  margin-top:14px;
+  font-size:13px;
+  color:#A0A0A0;
+}
+
+.quiz-top h3{
+  font-family:'Playfair Display', serif;
+  font-size:38px;
+
+  margin-bottom:12px;
+
+  color:var(--acute-light);
+}
+
+.quiz-top p{
+  color:#B0B0B0;
+  margin-bottom:36px;
+}
+
+.quiz-question{
+
+  margin-bottom:30px;
+
+  padding:26px;
+
+  border-radius:18px;
+
+  background:
+  rgba(255,255,255,0.03);
+
+  border:
+  1px solid rgba(255,255,255,0.06);
+}
+
+.quiz-question h4{
+  margin-bottom:18px;
+  font-size:18px;
+}
+
+.quiz-question label{
+  display:block;
+
+  margin-bottom:14px;
+
+  line-height:1.8;
+
+  color:#D0D0D0;
+
+  cursor:pointer;
+}
+
+.quiz-question input[type="radio"]{
+  margin-right:10px;
+  accent-color:var(--acute-light);
+}
+
+.quiz-result{
+
+  margin-top:32px;
+
+  padding:24px;
+
+  border-radius:18px;
+
+  background:
+  rgba(74,144,217,0.12);
+
+  border:
+  1px solid rgba(74,144,217,0.3);
+
+  line-height:1.8;
+}
+
+.hidden{
+  display:none;
+}
+
+/* FOOTER */
+
+footer{
+  background:var(--charcoal);
+
+  color:#999;
+
+  text-align:center;
+
+  padding:60px 6%;
+}
+
+footer h3{
+  font-family:'Playfair Display', serif;
+  font-size:28px;
+
+  color:white;
+
+  margin-bottom:20px;
+}
+
+footer p{
+  line-height:1.8;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+
+  .hero{
+    grid-template-columns:1fr;
+  }
+
+  .definitions{
+    grid-template-columns:1fr;
+  }
+
+}
+
+@media(max-width:700px){
+
+  .nav-links{
+    display:none;
+  }
+
+  .quiz-auth-card,
+  .quiz-container{
+    padding:24px;
+  }
+
+  .quiz-top h3{
+    font-size:30px;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAV -->
+
+<nav>
+
+  <div class="nav-logo">
+    Food Insecurity
+  </div>
+
+  <ul class="nav-links">
+    <li><a href="#definitions">Definitions</a></li>
+    <li><a href="#quiz-section">Quiz</a></li>
+  </ul>
+
+</nav>
+
+<!-- HERO -->
+
+<section class="hero">
+
+  <div class="hero-left">
+
+    <p class="hero-eyebrow">
+      Global Issues — Food Insecurity
+    </p>
+
+    <h1 class="hero-title">
+      <span>Chronic</span><br>
+      Food<br>
+      Insecurity
+    </h1>
+
+    <p class="hero-desc">
+      Long-term lack of reliable access to nutritious food caused by poverty,
+      inequality, and weak food systems.
+    </p>
+
+  </div>
+
+  <div class="hero-right">
+
+    <p class="hero-eyebrow">
+      Global Issues — Food Insecurity
+    </p>
+
+    <h1 class="hero-title">
+      <span>Acute</span><br>
+      Food<br>
+      Insecurity
+    </h1>
+
+    <p class="hero-desc">
+      Sudden severe food shortages caused by emergencies like conflict,
+      disasters, or economic collapse.
+    </p>
+
+  </div>
+
+</section>
+
+<!-- DEFINITIONS -->
+
+<section class="definitions" id="definitions">
+
+  <div class="def-card def-chronic">
+
+    <div class="def-tag">
+      Chronic
+    </div>
+
+    <div class="def-word">
+      Persistent.<br>
+      Long-term.<br>
+      Ongoing.
+    </div>
+
+    <p class="def-text">
+      Chronic food insecurity happens when people consistently lack reliable
+      access to enough safe and nutritious food over long periods of time.
+    </p>
+
+  </div>
+
+  <div class="def-card def-acute">
+
+    <div class="def-tag">
+      Acute
+    </div>
+
+    <div class="def-word">
+      Sudden.<br>
+      Severe.<br>
+      Urgent.
+    </div>
+
+    <p class="def-text">
+      Acute food insecurity appears quickly during emergencies and puts
+      lives at immediate risk.
+    </p>
+
+  </div>
+
+</section>
+
+<!-- QUIZ SECTION -->
+
+<section class="quiz-section" id="quiz-section">
+
+  <div class="section-label">
+    Interactive Learning
+  </div>
+
+  <div class="section-title">
+    Food Insecurity Quiz
+  </div>
+
+  <p class="section-intro">
+    Enter your phone number and OTP to unlock the quiz.
+  </p>
+
+  <!-- AUTH -->
+
+  <div class="quiz-auth-card" id="authCard">
+
+    <div id="phoneStep">
+
+      <label class="quiz-label">
+        Phone Number
+      </label>
+
+      <input
+        type="tel"
+        id="phoneInput"
+        class="quiz-input"
+        placeholder="Enter your phone number"
+      >
+
+      <button
+        class="quiz-btn"
+        onclick="sendOTP()"
+      >
+        Send OTP
+      </button>
+
+    </div>
+
+    <div
+      id="otpStep"
+      class="hidden"
+      style="margin-top:30px;"
+    >
+
+      <label class="quiz-label">
+        OTP Verification
+      </label>
+
+      <input
+        type="text"
+        id="otpInput"
+        class="quiz-input"
+        placeholder="Enter OTP"
+      >
+
+      <button
+        class="quiz-btn"
+        onclick="verifyOTP()"
+      >
+        Verify OTP
+      </button>
+
+      <p class="quiz-note">
+        Demo OTP: <strong>1234</strong>
+      </p>
+
+    </div>
+
+  </div>
+
+  <!-- QUIZ -->
+
+  <div
+    class="quiz-container hidden"
+    id="quizContainer"
+  >
+
+    <div class="quiz-top">
+
+      <h3>
+        Food Insecurity Knowledge Check
+      </h3>
+
+      <p>
+        Answer the following questions based on the webpage.
+      </p>
+
+    </div>
+
+    <form id="quizForm">
+
+      <!-- Q1 -->
+
+      <div class="quiz-question">
+
+        <h4>
+          1. What is chronic food insecurity?
+        </h4>
+
+        <label>
+          <input type="radio" name="q1" value="a">
+          A sudden emergency food shortage
+        </label>
+
+        <label>
+          <input type="radio" name="q1" value="b">
+          Long-term lack of reliable access to nutritious food
+        </label>
+
+        <label>
+          <input type="radio" name="q1" value="c">
+          Eating too much unhealthy food
+        </label>
+
+      </div>
+
+      <!-- Q2 -->
+
+      <div class="quiz-question">
+
+        <h4>
+          2. Which is a major cause of acute food insecurity?
+        </h4>
+
+        <label>
+          <input type="radio" name="q2" value="a">
+          Conflict and natural disasters
+        </label>
+
+        <label>
+          <input type="radio" name="q2" value="b">
+          Balanced diets
+        </label>
+
+        <label>
+          <input type="radio" name="q2" value="c">
+          Stable employment
+        </label>
+
+      </div>
+
+      <!-- Q3 -->
+
+      <div class="quiz-question">
+
+        <h4>
+          3. Hunger is...
+        </h4>
+
+        <label>
+          <input type="radio" name="q3" value="a">
+          The same as food insecurity
+        </label>
+
+        <label>
+          <input type="radio" name="q3" value="b">
+          A symptom of food insecurity
+        </label>
+
+        <label>
+          <input type="radio" name="q3" value="c">
+          A type of aid programme
+        </label>
+
+      </div>
+
+      <!-- Q4 -->
+
+      <div class="quiz-question">
+
+        <h4>
+          4. Approximately how much food is wasted globally?
+        </h4>
+
+        <label>
+          <input type="radio" name="q4" value="a">
+          10%
+        </label>
+
+        <label>
+          <input type="radio" name="q4" value="b">
+          One-third
+        </label>
+
+        <label>
+          <input type="radio" name="q4" value="c">
+          70%
+        </label>
+
+      </div>
+
+      <!-- Q5 -->
+
+      <div class="quiz-question">
+
+        <h4>
+          5. Which solution best addresses chronic food insecurity?
+        </h4>
+
+        <label>
+          <input type="radio" name="q5" value="a">
+          Long-term poverty reduction
+        </label>
+
+        <label>
+          <input type="radio" name="q5" value="b">
+          Ignoring inequality
+        </label>
+
+        <label>
+          <input type="radio" name="q5" value="c">
+          Waiting for emergencies
+        </label>
+
+      </div>
+
+      <button
+        type="button"
+        class="quiz-btn"
+        onclick="submitQuiz()"
+      >
+        Submit Quiz
+      </button>
+
+    </form>
+
+    <div
+      class="quiz-result hidden"
+      id="quizResult"
+    ></div>
+
+  </div>
+
+</section>
+
+<!-- FOOTER -->
+
+<footer>
+
+  <h3>
+    Food insecurity is a solvable problem.
+  </h3>
+
+  <p>
+    Understanding the problem is the first step toward fixing it.
+  </p>
+
+</footer>
+
+<!-- JAVASCRIPT -->
+
+<script>
+
+function sendOTP(){
+
+  const phone =
+  document
+  .getElementById("phoneInput")
+  .value
+  .trim();
+
+  if(phone.length < 8){
+
+    alert("Please enter a valid phone number.");
+    return;
+  }
+
+  alert("OTP sent successfully. Use 1234.");
+
+  document
+  .getElementById("otpStep")
+  .classList
+  .remove("hidden");
+}
+
+function verifyOTP(){
+
+  const otp =
+  document
+  .getElementById("otpInput")
+  .value
+  .trim();
+
+  if(otp === "1234"){
+
+    document
+    .getElementById("authCard")
+    .classList
+    .add("hidden");
+
+    document
+    .getElementById("quizContainer")
+    .classList
+    .remove("hidden");
+
+    window.location.hash = "quizContainer";
+
+  } else {
+
+    alert("Incorrect OTP.");
+
+  }
+}
+
+function submitQuiz(){
+
+  const answers = {
+
+    q1:"b",
+    q2:"a",
+    q3:"b",
+    q4:"b",
+    q5:"a"
+
+  };
+
+  let score = 0;
+
+  for(let key in answers){
+
+    const selected =
+    document.querySelector(
+      `input[name="${key}"]:checked`
+    );
+
+    if(selected &&
+       selected.value === answers[key]){
+
+      score++;
+    }
+  }
+
+  const result =
+  document.getElementById("quizResult");
+
+  result.classList.remove("hidden");
+
+  let feedback = "";
+
+  if(score === 5){
+
+    feedback =
+    "Excellent! Perfect score.";
+
+  } else if(score >= 3){
+
+    feedback =
+    "Good job. You understand most concepts.";
+
+  } else {
+
+    feedback =
+    "Review the material and try again.";
+  }
+
+  result.innerHTML = `
+    <strong>Your Score:</strong> ${score}/5
+    <br><br>
+    ${feedback}
+  `;
+
+  result.scrollIntoView({
+    behavior:"smooth"
+  });
+
+}
+
+</script>
+
+</body>
+</html>
