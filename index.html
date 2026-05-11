@@ -635,12 +635,64 @@
     .quiz-meal-visual { width: 100px; height: 100px; font-size: 48px; }
   }
 
+  /* ── HAMBURGER BUTTON ── */
+  .nav-hamburger {
+    display: none;
+    flex-direction: column; justify-content: center; align-items: center;
+    width: 40px; height: 40px; cursor: pointer;
+    background: none; border: none; padding: 4px;
+    border-radius: 8px; transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  .nav-hamburger:hover { background: rgba(28,28,28,0.06); }
+  .nav-hamburger span {
+    display: block; width: 22px; height: 2px;
+    background: var(--charcoal); border-radius: 2px;
+    transition: transform 0.3s ease, opacity 0.2s ease;
+    transform-origin: center;
+  }
+  .nav-hamburger span + span { margin-top: 5px; }
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* ── MOBILE MENU OVERLAY ── */
+  .mobile-menu {
+    display: none;
+    position: fixed; top: 64px; left: 0; right: 0; bottom: 0;
+    z-index: 99;
+    background: rgba(250,248,244,0.97);
+    backdrop-filter: blur(16px);
+    flex-direction: column; justify-content: center; align-items: center;
+    gap: 0;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .mobile-menu.open {
+    opacity: 1; pointer-events: all;
+  }
+  .mobile-menu a {
+    display: block; width: 100%; text-align: center;
+    padding: 20px 5%;
+    font-size: 18px; font-weight: 500; text-decoration: none;
+    color: var(--mid); letter-spacing: 0.3px; text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    transition: color 0.2s, background 0.2s;
+  }
+  .mobile-menu a:first-child { border-top: 1px solid var(--border); }
+  .mobile-menu a:hover { color: var(--charcoal); background: rgba(28,28,28,0.03); }
+  .mobile-menu a.nav-quiz {
+    color: #D4956A; font-weight: 600;
+  }
+
   @media (max-width: 600px) {
     .section, .data-section, .examples-section, .consequences-section,
     .compare-section, .response-section, .timeline-section, .overlap-section { padding: 60px 5%; }
     .examples-grid { grid-template-columns: 1fr; }
     .hero-stat-row { gap: 24px; }
     .nav-links { display: none; }
+    .nav-hamburger { display: flex; }
+    .mobile-menu { display: flex; }
     .data-bar-wrap { min-width: 60px; }
     .quiz-cta-inner { padding: 40px 24px; }
     .quiz-cta-right { flex-direction: column; }
@@ -660,7 +712,19 @@
     <li><a href="#response">Solutions</a></li>
     <li><a href="quiz.html" style="color: #D4956A; font-weight:600;">🥗 Quiz</a></li>
   </ul>
+  <button class="nav-hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<div class="mobile-menu" id="mobileMenu" role="dialog" aria-label="Navigation menu">
+  <a href="#definitions" class="mobile-link">What Is It</a>
+  <a href="#causes" class="mobile-link">Causes</a>
+  <a href="#compare" class="mobile-link">Comparison</a>
+  <a href="#consequences" class="mobile-link">Effects</a>
+  <a href="#response" class="mobile-link">Solutions</a>
+  <a href="quiz.html" class="mobile-link nav-quiz">🥗 Quiz</a>
+</div>
 
 <!-- ── HERO ── -->
 <section class="hero">
@@ -1237,6 +1301,30 @@
 </footer>
 
 <script>
+  // Hamburger menu
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+
+  function toggleMenu(open) {
+    hamburger.classList.toggle('open', open);
+    mobileMenu.classList.toggle('open', open);
+    hamburger.setAttribute('aria-expanded', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+
+  hamburger.addEventListener('click', () => {
+    toggleMenu(!hamburger.classList.contains('open'));
+  });
+
+  // Close on link click
+  mobileMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => toggleMenu(false));
+  });
+
+  // Close on outside click / resize
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleMenu(false); });
+  window.addEventListener('resize', () => { if (window.innerWidth > 600) toggleMenu(false); });
+
   const reveals = document.querySelectorAll('.reveal');
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {
