@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Food Insecurity Quiz — Win a Meal Coupon</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F5F0E8;
+    --warm-white: #FAF8F4;
+    --charcoal: #1C1C1C;
+    --mid: #4A4A4A;
+    --muted: #8A8680;
+    --chronic-dark: #2D1B0E;
+    --chronic-mid: #8B4513;
+    --chronic-light: #D4956A;
+    --chronic-pale: #F5E6D3;
+    --acute-dark: #0A1628;
+    --acute-mid: #1A4A7A;
+    --acute-light: #4A90D9;
+    --acute-pale: #D6E9F8;
+    --border: rgba(28,28,28,0.1);
+    --green: #2A6A3A;
+    --green-light: #5CB87A;
+    --green-pale: #E4F3EA;
+    --red: #6A1A1A;
+    --red-light: #D45A5A;
+    --red-pale: #F5E0E0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--warm-white);
+    color: var(--charcoal);
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(250,248,244,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 5%;
+    height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 700; letter-spacing: -0.5px;
+  }
+  .nav-back {
+    font-size: 12px; font-weight: 500; text-decoration: none;
+    color: var(--mid); letter-spacing: 0.3px; text-transform: uppercase;
+    transition: color 0.2s; display: flex; align-items: center; gap: 6px;
+  }
+  .nav-back:hover { color: var(--charcoal); }
+
+  /* ── HERO ── */
+  .quiz-hero {
+    background: #1C1410;
+    padding: 120px 6% 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .quiz-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 80% 50%, rgba(212,149,106,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 20% 80%, rgba(74,144,217,0.08) 0%, transparent 70%);
+  }
+  .quiz-hero-inner { position: relative; z-index: 1; max-width: 800px; }
+  .hero-eyebrow {
+    font-size: 11px; font-weight: 500; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--chronic-light);
+    margin-bottom: 20px;
+    opacity: 0; animation: fadeUp 0.6s 0.1s ease forwards;
+  }
+  .quiz-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(40px, 6vw, 80px);
+    font-weight: 900; line-height: 1.05;
+    color: #FAF8F4; margin-bottom: 24px;
+    opacity: 0; animation: fadeUp 0.6s 0.2s ease forwards;
+  }
+  .quiz-hero h1 span { color: var(--chronic-light); font-style: italic; }
+  .quiz-hero p {
+    font-size: 17px; line-height: 1.75; color: #B8A898; font-weight: 300;
+    max-width: 540px; margin-bottom: 40px;
+    opacity: 0; animation: fadeUp 0.6s 0.35s ease forwards;
+  }
+  .hero-prize {
+    display: inline-flex; align-items: center; gap: 14px;
+    background: rgba(212,149,106,0.1);
+    border: 1px solid rgba(212,149,106,0.25);
+    border-radius: 100px; padding: 12px 24px;
+    opacity: 0; animation: fadeUp 0.6s 0.5s ease forwards;
+  }
+  .prize-icon { font-size: 22px; }
+  .prize-text { font-size: 14px; color: var(--chronic-light); font-weight: 500; }
+  .prize-text strong { color: #FAF8F4; }
+
+  .hero-progress {
+    display: flex; align-items: center; gap: 16px; margin-top: 48px;
+    opacity: 0; animation: fadeUp 0.6s 0.6s ease forwards;
+  }
+  .progress-track {
+    flex: 1; height: 4px; background: rgba(255,255,255,0.08);
+    border-radius: 2px; overflow: hidden; max-width: 300px;
+  }
+  .progress-fill {
+    height: 100%; background: linear-gradient(90deg, var(--chronic-light), var(--acute-light));
+    border-radius: 2px;
+    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+    width: 0%;
+  }
+  .progress-label { font-size: 12px; color: #6A5A4A; letter-spacing: 0.5px; }
+  .progress-label span { color: var(--chronic-light); font-weight: 500; }
+
+  /* ── QUIZ CONTAINER ── */
+  .quiz-container {
+    padding: 60px 6% 100px;
+    max-width: 900px; margin: 0 auto;
+  }
+
+  /* ── QUESTION CARD ── */
+  .question-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 28px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.05);
+    opacity: 0; transform: translateY(28px);
+    transition: opacity 0.55s ease, transform 0.55s ease, box-shadow 0.25s ease;
+  }
+  .question-card.visible { opacity: 1; transform: translateY(0); }
+  .question-card:hover { box-shadow: 0 8px 40px rgba(0,0,0,0.09); }
+
+  .question-card.answered-correct {
+    border-color: rgba(92,184,122,0.4);
+    box-shadow: 0 4px 24px rgba(42,106,58,0.08);
+  }
+  .question-card.answered-wrong {
+    border-color: rgba(212,90,90,0.35);
+    box-shadow: 0 4px 24px rgba(106,26,26,0.08);
+  }
+
+  .q-top { height: 5px; background: linear-gradient(90deg, var(--chronic-dark), var(--chronic-light)); }
+  .q-top.alt { background: linear-gradient(90deg, var(--acute-dark), var(--acute-light)); }
+  .q-top.text-q { background: linear-gradient(90deg, var(--green), var(--green-light)); }
+
+  .q-body { padding: 32px 36px; }
+  .q-num {
+    font-size: 11px; font-weight: 500; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .q-num-badge {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--cream); font-size: 10px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--mid);
+  }
+  .q-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(18px, 2.5vw, 22px); font-weight: 700;
+    line-height: 1.35; margin-bottom: 28px;
+  }
+
+  /* ── OPTIONS ── */
+  .options-grid { display: flex; flex-direction: column; gap: 10px; }
+  .option {
+    display: flex; align-items: center; gap: 14px;
+    padding: 16px 20px; border-radius: 12px;
+    border: 1.5px solid var(--border);
+    background: var(--warm-white);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    user-select: none;
+  }
+  .option:hover:not(.locked) {
+    border-color: var(--chronic-light);
+    background: var(--chronic-pale);
+    transform: translateX(4px);
+  }
+  .option.selected { border-color: var(--chronic-mid); background: var(--chronic-pale); }
+  .option.correct {
+    border-color: var(--green-light);
+    background: var(--green-pale);
+    animation: correctPop 0.4s ease;
+  }
+  .option.wrong {
+    border-color: var(--red-light);
+    background: var(--red-pale);
+    animation: shake 0.4s ease;
+  }
+  .option.locked { cursor: default; }
+  .option.reveal-correct:not(.correct):not(.wrong) {
+    border-color: rgba(92,184,122,0.3);
+    background: rgba(228,243,234,0.4);
+  }
+
+  @keyframes correctPop {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.025); }
+    100% { transform: scale(1); }
+  }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    60% { transform: translateX(6px); }
+  }
+
+  .option-letter {
+    width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0;
+    background: var(--cream); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: var(--mid);
+    transition: all 0.2s;
+  }
+  .option.correct .option-letter { background: var(--green); color: white; border-color: var(--green); }
+  .option.wrong .option-letter { background: var(--red); color: white; border-color: var(--red); }
+  .option.reveal-correct:not(.correct):not(.wrong) .option-letter {
+    background: rgba(92,184,122,0.2); color: var(--green); border-color: var(--green-light);
+  }
+
+  .option-text { font-size: 14px; line-height: 1.5; color: var(--charcoal); font-weight: 300; }
+  .option.correct .option-text, .option.wrong .option-text { font-weight: 400; }
+
+  .option-icon {
+    margin-left: auto; font-size: 16px; opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .option.correct .option-icon, .option.wrong .option-icon { opacity: 1; }
+
+  /* ── FEEDBACK ── */
+  .q-feedback {
+    margin-top: 18px; padding: 16px 20px; border-radius: 10px;
+    font-size: 13px; line-height: 1.65; font-weight: 300;
+    display: none;
+    animation: fadeUp 0.3s ease;
+  }
+  .q-feedback.visible { display: block; }
+  .q-feedback.correct { background: var(--green-pale); color: var(--green); border-left: 3px solid var(--green-light); }
+  .q-feedback.wrong { background: var(--red-pale); color: var(--red); border-left: 3px solid var(--red-light); }
+  .q-feedback strong { font-weight: 600; }
+
+  /* ── TEXT QUESTION ── */
+  .text-question textarea {
+    width: 100%; min-height: 150px;
+    border: 1.5px solid var(--border);
+    border-radius: 12px; padding: 18px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px; line-height: 1.7;
+    color: var(--charcoal); font-weight: 300;
+    background: var(--warm-white);
+    resize: vertical;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+  .text-question textarea:focus {
+    border-color: var(--green-light);
+    box-shadow: 0 0 0 3px rgba(92,184,122,0.12);
+  }
+  .text-question textarea::placeholder { color: #B0A898; }
+  .char-count {
+    text-align: right; font-size: 12px; color: var(--muted);
+    margin-top: 8px; transition: color 0.2s;
+  }
+  .char-count.good { color: var(--green); }
+
+  /* ── SUBMIT BUTTON ── */
+  .submit-wrap { display: flex; justify-content: center; margin-top: 48px; }
+  .submit-btn {
+    background: linear-gradient(135deg, var(--chronic-dark), var(--chronic-mid));
+    color: #FAF8F4;
+    border: none; cursor: pointer;
+    padding: 18px 56px; border-radius: 100px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px; font-weight: 500; letter-spacing: 0.5px;
+    transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+    box-shadow: 0 8px 30px rgba(45,27,14,0.3);
+  }
+  .submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 40px rgba(45,27,14,0.35);
+  }
+  .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ── RESULT SCREEN ── */
+  #result-screen {
+    display: none; text-align: center;
+    padding: 60px 6% 100px;
+    max-width: 700px; margin: 0 auto;
+  }
+  #result-screen.visible { display: block; }
+  .result-icon { font-size: 72px; margin-bottom: 24px; animation: bounceIn 0.6s ease; }
+  @keyframes bounceIn {
+    0% { transform: scale(0.5); opacity: 0; }
+    70% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .result-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 5vw, 52px); font-weight: 900;
+    margin-bottom: 16px; line-height: 1.1;
+  }
+  .result-score {
+    font-family: 'Playfair Display', serif;
+    font-size: 64px; font-weight: 900;
+    line-height: 1; margin: 28px 0;
+  }
+  .result-score.win { color: var(--chronic-light); }
+  .result-score.lose { color: var(--muted); }
+  .result-sub { font-size: 16px; color: var(--mid); font-weight: 300; line-height: 1.7; margin-bottom: 36px; }
+
+  .coupon-box {
+    background: linear-gradient(135deg, #1C1410, #2D1B0E);
+    border-radius: 20px; padding: 40px;
+    position: relative; overflow: hidden;
+    margin-bottom: 32px;
+  }
+  .coupon-box::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(212,149,106,0.15) 0%, transparent 70%);
+  }
+  .coupon-inner { position: relative; z-index: 1; }
+  .coupon-label {
+    font-size: 11px; font-weight: 500; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--chronic-light);
+    margin-bottom: 16px;
+  }
+  .coupon-code {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px; font-weight: 900;
+    color: #FAF8F4; letter-spacing: 4px;
+    margin-bottom: 12px;
+  }
+  .coupon-desc { font-size: 14px; color: #8A7A6A; font-weight: 300; line-height: 1.6; }
+  .coupon-dashes {
+    border-top: 2px dashed rgba(212,149,106,0.2);
+    margin: 20px 0;
+  }
+  .coupon-validity {
+    font-size: 12px; color: #5A4A3A; letter-spacing: 0.5px;
+  }
+
+  .result-opinion {
+    background: var(--cream); border-radius: 16px; padding: 28px;
+    margin-bottom: 32px; text-align: left;
+  }
+  .result-opinion h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 700; margin-bottom: 12px;
+  }
+  .result-opinion p { font-size: 14px; line-height: 1.7; color: var(--mid); font-weight: 300; font-style: italic; }
+
+  .retry-btn {
+    background: transparent; border: 2px solid var(--border);
+    border-radius: 100px; padding: 14px 40px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px; font-weight: 500; color: var(--mid);
+    cursor: pointer; transition: all 0.2s;
+  }
+  .retry-btn:hover { border-color: var(--charcoal); color: var(--charcoal); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { opacity: 0; animation: fadeUp 0.6s ease forwards; }
+  .d1 { animation-delay: 0.1s; }
+  .d2 { animation-delay: 0.25s; }
+  .d3 { animation-delay: 0.4s; }
+
+  /* ── STICKY SCORE ── */
+  .score-pill {
+    position: fixed; bottom: 28px; right: 28px; z-index: 50;
+    background: var(--charcoal);
+    border-radius: 100px; padding: 10px 20px;
+    display: flex; align-items: center; gap: 10px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.4s, transform 0.4s;
+  }
+  .score-pill.visible { opacity: 1; transform: translateY(0); }
+  .sp-label { font-size: 12px; color: #5A5A5A; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
+  .sp-score { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; }
+  .sp-score.good { color: var(--chronic-light); }
+  .sp-score.bad { color: var(--red-light); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 700px) {
+    .q-body { padding: 24px 20px; }
+    .quiz-hero { padding: 100px 5% 60px; }
+    .quiz-container { padding: 40px 5% 80px; }
+    .coupon-code { font-size: 26px; letter-spacing: 2px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Food Insecurity — Quiz</div>
+  <a href="index.html" class="nav-back">← Back to Main Page</a>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="quiz-hero">
+  <div class="quiz-hero-inner">
+    <p class="hero-eyebrow">Imperial College Egypt · Global Issues</p>
+    <h1>Test Your<br><span>Knowledge.</span><br>Win a Meal.</h1>
+    <p>Answer 8 questions on food insecurity and share your ideas for change. Score 6 or higher and claim your coupon for a free nutritious meal at our partner canteen.</p>
+    <div class="hero-prize">
+      <span class="prize-icon">🥗</span>
+      <span class="prize-text"><strong>Prize:</strong> Free Nutritious Meal Coupon — score 6/8 or more to win</span>
+    </div>
+    <div class="hero-progress">
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-label">Question <span id="progressText">0</span> of 8</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── QUIZ ── -->
+<div class="quiz-container" id="quizContainer">
+
+  <!-- Q1 -->
+  <div class="question-card" data-q="0">
+    <div class="q-top"></div>
+    <div class="q-body">
+      <div class="q-num"><div class="q-num-badge">1</div> Multiple Choice</div>
+      <div class="q-text">What is the key difference between <em>chronic</em> and <em>acute</em> food insecurity?</div>
+      <div class="options-grid">
+        <div class="option" data-correct="false" onclick="selectOption(this, 0)">
+          <div class="option-letter">A</div>
+          <div class="option-text">Chronic affects adults while acute affects children</div>
+          <div class="option-icon"></div>
+        </div>
+        <div class="option" data-correct="true" onclick="selectOption(this, 0)">
+          <div class="option-letter">B</div>
+          <div class="option-text">Chronic is long-term and rooted in structural problems; acute is sudden and triggered by emergencies</div>
+          <div class="option-icon"></div>
+        </div>
+        <div class="option" data-correct="false" onclick="selectOption(this, 0)">
+          <div class="option-letter">C</div>
+          <div class="option-text">Acute food insecurity only happens in developing countries</div>
+          <div class="option-icon"></div>
+        </div>
+        <div class="option" data-correct="false" onclick="selectOption(this, 0)">
+          <div class="option-letter">D</div>
+          <div class="option-text">Chronic food insecurity is always more dangerous than acute food insecurity</div>
+          <div class="option-icon"></div>
+        </div>
+      </div>
+      <div class="q-feedback" id="fb-0">
+        <strong>✓ Correct!</strong> Chronic food insecurity builds over a long period due to persistent poverty and inequality, while acute food insecurity hits suddenly — often due to war, natural disasters, or economic shocks — and demands urgent humanitarian response.
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="question-card" data-q="1">
+    <div class="q-top alt"></div>
+    <div class="q-body">
+      <div class="q-num"><div class="q-num-badge">2</div> Multiple Choice</div>
+      <div class="q-text">Which of the following is the <em>most direct</em> cause of chronic food insecurity?</div>
+      <div class="options-grid">
+        <div class="option" data-correct="false" onclick="selectOption(this, 1)">
+          <div class="option-letter">A</div>
+          <div class="option-text">Earthquakes and floods</div>
+          <div class="option-icon"></div>
+        </div>
+        <div class="option" data-correct="false" onclick="selectOption(this, 1)">
+          <div class="option-letter">B</div>
+          <div class="option-text">Currency devaluation</div>
+          <div class="option-icon"></div>
+        </div>
+        <div class="option" data-correct="true" onclick="selectOption(this, 1)">
+          <div class="option-letter">C</div>
+          <div class="option-text">Poverty — people cannot consistently afford enough nutritious food</div>
+          <div class="option-icon"></div>
+        </div>
+        <div class="option" data-correct="false" onclick="selectOption(this, 1)">
+          <div class="option-letter">D</div>
+          <div class="option-text">War and civil conflict</div>
+          <div class="option-icon"></div>
+        </div>
+      </div>
+      <div class="q-feedback" id="fb-1">
+        <strong>✓ Correct!</strong> Poverty is the most direct and persistent cause of chronic food insecurity. Low income limits access to food, transportation, and cooking facilities — and keeps people trapped in a cycle of hunger that doesn't go away on its own.
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="question-card" data-q="2">
+    <div class="q-top"></div>
+    <div class="q-body">
+      <div class="q-num"><div class="q-num-badge">3</div> Multiple Choice</div>
+      <div class="q-text">A person eats plenty of cheap processed food every day and feels full — but their diet lacks vitamins and minerals. Which term best describes their situation?</div>
+      <div class="options-grid">
+        <div class="option" data-correct="false" onclick="selectOption(this, 2)">
+          <div class="option-letter">A</div>
+          <div class="option-text">Hunger — they are physically starving</div>
+          <div class="option-icon"></div>
+        </div>
+        <div class="option" data-correct="false" onclick="selectOption(this, 2)">
+          <div class="option-letter">B</div>
+          <div class="option-text">Undernutrition — they are not getting enough calories</div>
+          <div class="option-icon"></div>
+        </div>
+        <div class="option" data-correct="true" onclick="selectOption(this, 2)">
+          <div class="option-letter">C</div>
+          <div class="option-text">Malnutrition — their diet is nutritionally unbalanced despite feeling full</div>
+          <div class="option-icon"></div>
+        </div>
+        <div class="option" data-correct="false" onclick="selectOption(this, 2)">
+          <div class="option-letter">D</div>
+          <div class="option-text">Overnutrition — they are consuming too many calories only</div>
+          <div class="option-icon"></div>
+        </div>
+      </div>
+      <div class="q-feedback" id="fb-2">
+        <strong>✓ Correct!</strong> Malnutrition refers to any imbalance in nutrition — including eating too much of the wrong things. You can be malnourished without ever feeling hungry, which is why it's important to distinguish it from hunger.
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="question-card" data-q="3">
+    <div class="q-top alt"></div>
+    <div class="q-body">
+      <div class="q-num"><div class="q-num-badge">4</div> Multiple Choice</div>
+      <div class="q-text">Approximately what fraction of all food produced globally is <em>wasted</em> every year?</div>
+      <div class="options-grid">
+        <div class="option" data-correct="false" onclick="selectOption(this, 3)">
+          <div class="option-letter">A</div>
+          <div class="option-text">One tenth (10%)</div>
+          <div class="option-icon"></div>
+        </div>
+        <div class="option" data-correct="false" onclick="selectOption(this, 3)">
+          <div class="option-letter">B</div>
+          <div class="option-text">One quarter (25%)</div>
+          <div class="option-icon"></div>
+        </div>
+        <div class="option" data-correct="true" onclick="selectOption(this, 3)">
+          <div class="option-letter">C</div>
+          <div class="option-text">One third (roughly 33%)</div>
+          <div class="option-icon"></div>
+        </div>
+        <div class="option" data-correct="false" onclick="selectOption(this, 3)">
+          <div class="option-letter">D</div>
+          <div class="option-text">One half (50%)</div>
+          <div class="option-icon"></div>
+        </div>
+      </div>
+      <div class="q-feedback" id="fb-3">
+        <strong>✓ Correct!</strong> About one third of all food produced globally is wasted every year — a staggering amount. Reducing food waste is one of the most powerful levers we have to improve food security without growing more food.
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="question-card" data-q="4">
+    <div class="q-top"></div>
+    <div class="q-body">
+      <div class="q-num"><div class="q-num-badge">5</div> Multiple Choice</div>
+      <div class="q-text">Which region has the highest rate of food insecurity — nearly double the global average?</div>
+      <div class="options-grid">
+        <div class="option" data-correct="false" onclick="selectOption(this, 4)">
+          <div class="option-letter">A</div>
+          <div class="option-text">South Asia</div>
+          <div class="option-icon"></div>
+        </div>
+        <div class="option" data-correct="false" onclick="selectOption(this, 4)">
+          <div class="option-letter">B</div>
+          <div class="option-text">Latin America</div>
+          <div class="option-icon"></div>
+        </div>
+        <div class="option" data-correct="true" onclick="selectOption(this, 4)">
+          <div class="option-letter">C</div>
+          <div class="option-text">Africa — approximately 58% face moderate or severe food insecurity</div>
+          <div class="option-icon"></div>
+        </div>
+        <div class="option" data-correct="false" onclick="selectOption(this, 4)">
+          <div class="option-letter">D</div>
+          <div class="option-text">Eastern Europe</div>
+          <div class="option-icon"></div>
+        </div>
+      </div>
+      <div class="q-feedback" id="fb-4">
+        <strong>✓ Correct!</strong> Africa has the highest prevalence of food insecurity at around 58% — nearly double the global rate of approximately 30%. This is driven by a combination of poverty, conflict, climate vulnerability, and structural inequality.
+      </div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="question-card" data-q="5">
+    <div class="q-top alt"></div>
+    <div class="q-body">
+      <div class="q-num"><div class="q-num-badge">6</div> Multiple Choice</div>
+      <div class="q-text">A farming community loses its entire harvest due to a severe drought. The following year, drought strikes again, and the year after. What best describes their situation over time?</div>
+      <div class="options-grid">
+        <div class="option" data-correct="false" onclick="selectOption(this, 5)">
+          <div class="option-letter">A</div>
+          <div class="option-text">Only acute food insecurity — each drought is a separate emergency</div>
+          <div class="option-icon"></div>
+        </div>
+        <div class="option" data-correct="false" onclick="selectOption(this, 5)">
+          <div class="option-letter">B</div>
+          <div class="option-text">Only chronic food insecurity — droughts are not sudden events</div>
+          <div class="option-icon"></div>
+        </div>
+        <div class="option" data-correct="true" onclick="selectOption(this, 5)">
+          <div class="option-letter">C</div>
+          <div class="option-text">Both — recurring acute crises can transition a community into chronic food insecurity</div>
+          <div class="option-icon"></div>
+        </div>
+        <div class="option" data-correct="false" onclick="selectOption(this, 5)">
+          <div class="option-letter">D</div>
+          <div class="option-text">Neither — food insecurity only applies to urban populations</div>
+          <div class="option-icon"></div>
+        </div>
+      </div>
+      <div class="q-feedback" id="fb-5">
+        <strong>✓ Correct!</strong> Both types can happen to the same people. A single drought is an acute crisis, but repeated droughts — especially driven by climate change — slide a community into chronic food insecurity. The two types are not mutually exclusive.
+      </div>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="question-card" data-q="6">
+    <div class="q-top"></div>
+    <div class="q-body">
+      <div class="q-num"><div class="q-num-badge">7</div> Multiple Choice</div>
+      <div class="q-text">When local markets are still functioning during a crisis, which emergency response strategy is often considered the <em>most effective and dignified</em>?</div>
+      <div class="options-grid">
+        <div class="option" data-correct="false" onclick="selectOption(this, 6)">
+          <div class="option-letter">A</div>
+          <div class="option-text">Airlifting pre-packaged food rations from abroad</div>
+          <div class="option-icon"></div>
+        </div>
+        <div class="option" data-correct="true" onclick="selectOption(this, 6)">
+          <div class="option-letter">B</div>
+          <div class="option-text">Cash or voucher transfers — letting people buy food from local markets themselves</div>
+          <div class="option-icon"></div>
+        </div>
+        <div class="option" data-correct="false" onclick="selectOption(this, 6)">
+          <div class="option-letter">C</div>
+          <div class="option-text">Building new roads in the affected region immediately</div>
+          <div class="option-icon"></div>
+        </div>
+        <div class="option" data-correct="false" onclick="selectOption(this, 6)">
+          <div class="option-letter">D</div>
+          <div class="option-text">Waiting for the government to restore food supplies naturally</div>
+          <div class="option-icon"></div>
+        </div>
+      </div>
+      <div class="q-feedback" id="fb-6">
+        <strong>✓ Correct!</strong> Cash or voucher transfers are often faster, more flexible, and more dignified than direct food aid — they allow people to choose what to buy, support local economies, and reduce logistical costs. They work best when local markets are still functioning.
+      </div>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="question-card" data-q="7">
+    <div class="q-top alt"></div>
+    <div class="q-body">
+      <div class="q-num"><div class="q-num-badge">8</div> Multiple Choice</div>
+      <div class="q-text">Which of these statements about food insecurity, hunger, and malnutrition is <em>true</em>?</div>
+      <div class="options-grid">
+        <div class="option" data-correct="false" onclick="selectOption(this, 7)">
+          <div class="option-letter">A</div>
+          <div class="option-text">Hunger and malnutrition are exactly the same thing</div>
+          <div class="option-icon"></div>
+        </div>
+        <div class="option" data-correct="false" onclick="selectOption(this, 7)">
+          <div class="option-letter">B</div>
+          <div class="option-text">Food insecurity only affects people who feel physically hungry</div>
+          <div class="option-icon"></div>
+        </div>
+        <div class="option" data-correct="false" onclick="selectOption(this, 7)">
+          <div class="option-letter">C</div>
+          <div class="option-text">Malnutrition only occurs when someone has too little food</div>
+          <div class="option-icon"></div>
+        </div>
+        <div class="option" data-correct="true" onclick="selectOption(this, 7)">
+          <div class="option-letter">D</div>
+          <div class="option-text">You can be food insecure without being hungry, and malnourished without feeling hungry</div>
+          <div class="option-icon"></div>
+        </div>
+      </div>
+      <div class="q-feedback" id="fb-7">
+        <strong>✓ Correct!</strong> These three concepts are distinct. Food insecurity is about reliability of access — even someone who eats daily might be food insecure if they can't count on the next meal. Malnutrition includes overnutrition, so someone eating cheap processed food can be malnourished without ever feeling hungry.
+      </div>
+    </div>
+  </div>
+
+  <!-- Q9: Opinion -->
+  <div class="question-card text-question" data-q="8">
+    <div class="q-top text-q"></div>
+    <div class="q-body">
+      <div class="q-num"><div class="q-num-badge">9</div> Open Response</div>
+      <div class="q-text">In your opinion, what is the single most important step governments or communities can take to reduce food insecurity — and why?</div>
+      <textarea id="opinionText" placeholder="Share your thoughts here... There's no wrong answer. Think about causes, solutions, or examples from what you've learned." maxlength="800" oninput="updateCharCount(this)"></textarea>
+      <div class="char-count" id="charCount">0 / 800 characters</div>
+    </div>
+  </div>
+
+  <div class="submit-wrap">
+    <button class="submit-btn" id="submitBtn" onclick="submitQuiz()" disabled>
+      Submit &amp; Claim Your Coupon →
+    </button>
+  </div>
+</div>
+
+<!-- ── RESULT SCREEN ── -->
+<div id="result-screen">
+  <div id="result-icon" class="result-icon">🏆</div>
+  <div id="result-title" class="result-title"></div>
+  <div id="result-score" class="result-score"></div>
+  <p id="result-sub" class="result-sub"></p>
+
+  <div id="coupon-area"></div>
+  <div id="opinion-area"></div>
+
+  <button class="retry-btn" onclick="retryQuiz()">Try Again</button>
+</div>
+
+<!-- ── SCORE PILL ── -->
+<div class="score-pill" id="scorePill">
+  <span class="sp-label">Score</span>
+  <span class="sp-score" id="scorePillVal">0/8</span>
+</div>
+
+<script>
+  const TOTAL_MCQ = 8;
+  let answers = new Array(9).fill(null); // 0-7 MCQ, 8 = opinion
+  let score = 0;
+  let answeredCount = 0;
+
+  // Reveal cards on scroll
+  const cards = document.querySelectorAll('.question-card');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.08 });
+  cards.forEach(c => io.observe(c));
+
+  function selectOption(el, qIndex) {
+    const card = document.querySelector(`[data-q="${qIndex}"]`);
+    if (card.classList.contains('locked')) return;
+    card.classList.add('locked');
+
+    const isCorrect = el.dataset.correct === 'true';
+    const allOptions = card.querySelectorAll('.option');
+
+    allOptions.forEach(opt => {
+      opt.classList.add('locked');
+      if (opt.dataset.correct === 'true') {
+        opt.classList.add('correct');
+        opt.querySelector('.option-icon').textContent = '✓';
+      }
+    });
+
+    if (!isCorrect) {
+      el.classList.add('wrong');
+      el.querySelector('.option-icon').textContent = '✗';
+    }
+
+    const fb = document.getElementById(`fb-${qIndex}`);
+    fb.classList.add('visible', isCorrect ? 'correct' : 'wrong');
+    if (!isCorrect) {
+      fb.innerHTML = `<strong>Not quite.</strong> ${fb.innerHTML.replace(/<strong>.*?<\/strong>/, '')}`;
+      fb.innerHTML = `<strong>✗ Not quite.</strong> The correct answer is highlighted in green above.`;
+    }
+
+    // Track score
+    if (isCorrect && answers[qIndex] === null) {
+      score++;
+      answers[qIndex] = true;
+    } else if (!isCorrect && answers[qIndex] === null) {
+      answers[qIndex] = false;
+    }
+
+    answeredCount++;
+    card.classList.add(isCorrect ? 'answered-correct' : 'answered-wrong');
+
+    updateProgress();
+    updateScorePill();
+    checkSubmitEnabled();
+  }
+
+  function updateCharCount(el) {
+    const len = el.value.length;
+    const counter = document.getElementById('charCount');
+    counter.textContent = `${len} / 800 characters`;
+    counter.classList.toggle('good', len >= 50);
+    answers[8] = el.value;
+    checkSubmitEnabled();
+  }
+
+  function updateProgress() {
+    const done = answeredCount;
+    const pct = Math.round((done / TOTAL_MCQ) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressText').textContent = Math.min(done, 8);
+  }
+
+  function updateScorePill() {
+    const pill = document.getElementById('scorePill');
+    const val = document.getElementById('scorePillVal');
+    pill.classList.add('visible');
+    val.textContent = `${score}/${TOTAL_MCQ}`;
+    val.className = 'sp-score ' + (score >= 7 ? 'good' : 'bad');
+  }
+
+  function checkSubmitEnabled() {
+    const opinionFilled = (document.getElementById('opinionText').value || '').length >= 20;
+    document.getElementById('submitBtn').disabled = !(answeredCount === TOTAL_MCQ && opinionFilled);
+  }
+
+  function generateCoupon() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let code = '';
+    for (let i = 0; i < 12; i++) {
+      if (i === 4 || i === 8) code += '-';
+      code += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return code;
+  }
+
+  function submitQuiz() {
+    const rs = document.getElementById('result-screen');
+    const qc = document.getElementById('quizContainer');
+    qc.style.display = 'none';
+    rs.classList.add('visible');
+    rs.scrollIntoView({ behavior: 'smooth' });
+
+    const won = score >= 7;
+    document.getElementById('result-icon').textContent = won ? '🏆' : '📚';
+    document.getElementById('result-title').textContent = won ? 'Congratulations!' : 'Great Effort!';
+    document.getElementById('result-score').textContent = `${score} / ${TOTAL_MCQ}`;
+    document.getElementById('result-score').className = 'result-score ' + (won ? 'win' : 'lose');
+    document.getElementById('result-sub').textContent = won
+      ? `You scored ${score} out of 8 — you clearly understand the global food crisis. Your coupon is waiting below.`
+      : `You scored ${score} out of 8. You need 7 or more to win a coupon — but your ideas still matter! Review the material and try again.`;
+
+    const couponArea = document.getElementById('coupon-area');
+    if (won) {
+      const code = generateCoupon();
+      couponArea.innerHTML = `
+        <div class="coupon-box">
+          <div class="coupon-inner">
+            <div class="coupon-label">🥗 Your Meal Coupon</div>
+            <div class="coupon-code">${code}</div>
+            <div class="coupon-desc">Redeem at the TBS Cafe for a discount one nutritious meal.<br>Show this code at the counter.</div>
+            <div class="coupon-dashes"></div>
+            <div class="coupon-validity">Valid for 7 days · One use only · Cannot be combined with other offers</div>
+          </div>
+        </div>`;
+    }
+
+    const opinion = document.getElementById('opinionText').value;
+    if (opinion && opinion.length > 10) {
+      document.getElementById('opinion-area').innerHTML = `
+        <div class="result-opinion">
+          <h3>Your Thoughts on Resolving Food Insecurity</h3>
+          <p>"${opinion}"</p>
+        </div>`;
+    }
+  }
+
+  function retryQuiz() {
+    window.location.reload();
+  }
+</script>
+</body>
+</html>
